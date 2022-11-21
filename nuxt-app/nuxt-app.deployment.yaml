@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nuxt-app-deployment
+  labels:
+    app: nuxt-app
+spec:
+  selector:
+    matchLabels:
+      app: nuxt-app
+  template:
+    metadata:
+      labels:
+        app: nuxt-app
+    spec:
+      containers:
+      - name: nuxt-app
+        image: mcclunatic/nuxt-app
+        ports:
+        - containerPort: 3000
