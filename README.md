@@ -195,3 +195,21 @@ commands (here, with `-i ~/.ansible/etc/hosts`):
     "ping": "pong"
 }
 ```
+
+A richer format for an inventory file is YAML. Here, we modify the previous
+example to provide named hosts for each IP:
+
+```yaml
+raspberrypis:
+  hosts:
+    raspberrypi-0:
+      ansible_host: 192.168.1.100
+    raspberrypi-1:
+      ansible_host: 192.168.1.101
+    raspberrypi-2:
+      ansible_host: 192.168.1.102
+    raspberrypi-3:
+      ansible_host: 192.168.1.103
+  vars:
+    ansible_user: pi
+```
