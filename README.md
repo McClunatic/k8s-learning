@@ -10,6 +10,7 @@ This repository will document resources and training to learn Kubernetes.
 * [Kubernetes on Windows with WSL 2 and Microk8s](https://youtu.be/DmfuJzX6vJQ)
 * [Nuxt Installation](https://nuxt.com/docs/getting-started/installation)
 * [Kubernetes Object Management](https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/)
+* [Getting started with Ansible](https://docs.ansible.com/ansible/latest/getting_started/index.html)
 
 ## Setup
 
@@ -102,4 +103,95 @@ The following example takes a declarative approach:
 
 ```shell
 kubectl apply -f nuxt-app.deployment.yaml
+```
+
+### Setting up Ansible
+
+From Ansible's documentation:
+
+> Ansible is an IT automation tool. It can configure systems, deploy software,
+> and orchestrate more advanced IT tasks such as continuous deployments or zero
+> downtime rolling updates.
+>
+> Ansible’s main goals are simplicity and ease-of-use. It also has a strong
+> focus on security and reliability, featuring a minimum of moving parts, usage
+> of OpenSSH for transport (with other transports and pull modes as
+> alternatives), and a language that is designed around auditability by
+> humans–even those not familiar with the program.
+
+This section is optional, meant to support setup, configuration, and
+maintenance of nodes in a Kubernetes cluster. To read more, follow the link to
+[get started with Ansible](https://docs.ansible.com/ansible/latest/getting_started/index.html).
+
+#### Installing Ansible
+
+Installing Ansible (on what will be the *control node*) requires a Python 3.8
+or higher on the system, with pip installed as well. To ensure pip is installed
+on Ubuntu 22.04 LTS, for example, run:
+
+```shell
+> sudo apt install python3-pip python3-pip-whl
+```
+
+With pip installed, install Ansible for the current user as follows:
+
+```shell
+> python3 -m pip install --user ansible
+```
+
+#### Creating an inventory
+
+Create an inventory file by adding the IP addresses or fully qualified domain
+names of the remote nodes to manage (to make *managed nodes*). For example,
+with a cluster of 4 Raspberry Pi systems with a default user `pi`, an
+inventory might look like this:
+
+```ini
+[raspberrypis]
+192.168.1.100
+192.168.1.101
+192.168.1.102
+192.168.1.103
+
+[raspberrypis:vars]
+ansible_user=pi
+```
+
+> The `ansible_user` ensures connections are established using the `pi` user
+> if the user on the control node is another username.
+
+The default location for the inventory file is `/etc/ansible/hosts`.
+One can use another location and specify that file when running ansible
+commands (here, with `-i ~/.ansible/etc/hosts`):
+
+```shell
+> ansible -i ~/.ansible/etc/hosts raspberrypis -m ping
+192.168.1.102 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.101 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.100 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.103 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
 ```
