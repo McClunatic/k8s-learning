@@ -1,0 +1,39 @@
+# https://snapcraft.io/docs/installing-snap-on-raspbian
+# https://microk8s.io/#install-microk8s
+- name: upgrade OS and install snapd
+  hosts: "{{ variable_host | default('k8s') }}"
+  become: true
+  tasks:
+    - name: run apt update
+      ansible.builtin.apt:
+        update_cache: true
+    - name: run apt upgrade
+      ansible.builtin.apt:
+        upgrade: true
+    - name: run apt install snapd
+      ansible.builtin.apt:
+        name: snapd
+    - name: reboot and await restart
+      ansible.builtin.reboot:
+    - name: run snap install core
+      community.general.snap:
+        name: core
+    - name: run snap install microk8s
+      community.general.snap:
+        name: microk8s
+        classic: true
+    - name: add user to microk8s group
+      ansible.builtin.user:
+        name: pi
+        groups: microk8s
+        append: true
+    - name: give user ownership of ~/.kube
+      ansible.builtin.file:
+        path: ~/.kube
+        state: directory
+        recurse: true
+        owner: pi
+    - name: wait for microk8s to be ready
+      ansible.builtin.command: microk8s status --wait-ready
+      environment:
+        PATH: '${PATH}:/snap/bin/'
