@@ -1,0 +1,5 @@
+# Additional hosts file
+
+{% for host in dnsmasq_addn_hosts_list %}
+{{ host }}
+{% endfor %}

@@ -1,0 +1,10 @@
+# https://microk8s.io/#install-microk8s
+# https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
+- name: wait for microk8s to be ready
+  ansible.builtin.command: microk8s status --wait-ready
+  environment:
+    PATH: '${PATH}:/snap/bin/'
+# - name: join node to microk8s cluster
+#   ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
+#   environment:
+#     PATH: '${PATH}:/snap/bin/'

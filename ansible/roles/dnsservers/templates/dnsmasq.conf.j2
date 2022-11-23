@@ -1,0 +1,18 @@
+# Dnsmasq configuration
+
+{% if dnsmasq_domain_needed %}
+domain-needed
+{% endif %}
+{% if dnsmasq_bogus_priv %}
+bogus-priv
+{% endif %}
+{% if dnsmasq_expand_hosts %}
+expand-hosts
+{% endif %}
+{% if dnsmasq_domain is defined %}
+domain={{ dnsmasq_domain }}
+{% endif %}
+
+{% if dnsmasq_addn_hosts is defined %}
+addn-hosts={{ dnsmasq_addn_hosts }}
+{% endif %}

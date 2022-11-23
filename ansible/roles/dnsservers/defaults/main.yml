@@ -1,0 +1,11 @@
+dnsmasq_domain_needed: true
+dnsmasq_bogus_priv: true
+dnsmasq_expand_priv: true
+dnsmasq_domain: local
+dnsmasq_addn_hosts: /etc/additional_hosts
+dnsmasq_addn_hosts_list:
+  - 192.168.1.99    zephyrus
+  - 192.168.1.100   raspberrypi-0
+  - 192.168.1.101   raspberrypi-1
+  - 192.168.1.102   raspberrypi-2
+  - 192.168.1.103   raspberrypi-3

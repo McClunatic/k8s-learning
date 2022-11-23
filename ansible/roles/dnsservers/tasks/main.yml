@@ -1,0 +1,25 @@
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+  become: true
+- name: run apt install dnsmasq
+  ansible.builtin.apt:
+    name: dnsmasq
+  become: true
+- name: configure dnsmasq
+  ansible.builtin.template:
+    dest: /etc/dnsmasq.conf
+    src: dnsmasq.conf.j2
+    validate: dnqmasq --test -C %s
+- name: configure dnsmasq
+  ansible.builtin.template:
+    dest: "{{ dnsmasq_addn_hosts }}"
+    src: additional_hosts.j2
+- name: restart service dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted

@@ -1,0 +1,4 @@
+- name: upgrade OS and install snapd
+  hosts: "{{ variable_host | default('k8s') }}"
+  roles:
+    - common

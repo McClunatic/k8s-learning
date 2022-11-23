@@ -1,51 +1,40 @@
 # https://snapcraft.io/docs/installing-snap-on-raspbian
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
-- name: upgrade OS and install snapd
-  hosts: "{{ variable_host | default('k8s') }}"
-  tasks:
-    - name: run apt update
-      ansible.builtin.apt:
-        update_cache: true
-      become: true
-    - name: run apt upgrade
-      ansible.builtin.apt:
-        upgrade: true
-      become: true
-    - name: run apt install snapd
-      ansible.builtin.apt:
-        name: snapd
-      become: true
-    - name: reboot and await restart
-      ansible.builtin.reboot:
-      become: true
-    - name: run snap install core
-      community.general.snap:
-        name: core
-      become: true
-    - name: run snap install microk8s
-      community.general.snap:
-        name: microk8s
-        classic: true
-      become: true
-    - name: add user to microk8s group
-      ansible.builtin.user:
-        name: pi
-        groups: microk8s
-        append: true
-      become: true
-    - name: give user ownership of ~/.kube
-      ansible.builtin.file:
-        path: ~/.kube
-        state: directory
-        recurse: true
-        owner: pi
-      become: true
-    - name: wait for microk8s to be ready
-      ansible.builtin.command: microk8s status --wait-ready
-      environment:
-        PATH: '${PATH}:/snap/bin/'
-    # - name: join node to microk8s cluster
-    #   ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
-    #   environment:
-    #     PATH: '${PATH}:/snap/bin/'
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+  become: true
+- name: run apt install snapd
+  ansible.builtin.apt:
+    name: snapd
+  become: true
+- name: reboot and await restart
+  ansible.builtin.reboot:
+  become: true
+- name: run snap install core
+  community.general.snap:
+    name: core
+  become: true
+- name: run snap install microk8s
+  community.general.snap:
+    name: microk8s
+    classic: true
+  become: true
+- name: add user to microk8s group
+  ansible.builtin.user:
+    name: pi
+    groups: microk8s
+    append: true
+  become: true
+- name: give user ownership of ~/.kube
+  ansible.builtin.file:
+    path: ~/.kube
+    state: directory
+    recurse: true
+    owner: pi
+  become: true
