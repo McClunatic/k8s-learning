@@ -222,14 +222,24 @@ raspberrypis:
 
 ### Accessing WSL 2 from a local area network (LAN)
 
-To [access a WSL 2 distribution from a LAN](https://learn.microsoft.com/en-us/windows/wsl/networking#accessing-a-wsl-2-distribution-from-your-local-area-network-lan),
-the steps are the same as for a regular virtual machine. That is, port
-forwarding (e.g., via a port proxy) is required between the Windows environment
-and the WSL 2 VM.
+By default, WSL 2 runs in Network Access Translation (NAT) mode, meaning
+it has a virtualized ethernet adapter with its own unique IP address.
+This makes it challenging to access a WSL 2 distribution from another
+local area network (LAN) machine. To enable access, there are two options:
 
-In the following example, IP addresses for the Ubuntu WSL 2 distribution are
-captured into the `$hostnames` array. The primary IP address is then used as
-the connect address for a port proxy started by `netsh`:
+1. To go through the same steps as one would for a regular virtual machine
+   with an internal virtual network. This approach for
+   [accessing a WSL 2 distribution from a LAN](https://learn.microsoft.com/en-us/windows/wsl/networking#accessing-a-wsl-2-distribution-from-your-local-area-network-lan)
+   is documented by Microsoft.
+2. To configure Windows, Hyper-V, and WSL 2 to support and run in bridged mode,
+   allowing the WSL 2 distribution to acquire an IP address itself in the
+   LAN.
+
+#### Option 1: An example
+
+IP addresses for the Ubuntu WSL 2 distribution are captured into the
+`$hostnames` array. The primary IP address is then used as the connect address
+for a port proxy started by `netsh`:
 
 ```ps1con
 > $hostnames = @(& wsl -d Ubuntu hostname -I) -split ' '
@@ -238,8 +248,36 @@ the connect address for a port proxy started by `netsh`:
     connectport=25000 connectaddress=$hostnames[0]
 ```
 
-This step is necessary to enable connecting microk8s worker instances to a main
-instance (running the control plane) running in WSL 2.
+#### Option 2: By reference
+
+Setting up WSL 2 to run in bridged mode involves:
+
+* Ensuring minimum version requirements for WSL 2 itself
+* Setting up a bridged virtual switch in Hyper-V
+* Reconfiguring WSL 2
+
+This approach was discussed in a
+[WSL GitHub feature request](https://github.com/microsoft/WSL/issues/4150#issuecomment-1303984769)
+and more completely documented in a
+[WSL 2 bridged mode networking guide](https://github.com/luxzg/WSL2-fixes/blob/master/networkingMode%3Dbridged.md).
+
+#### Why Option 2 is necessary
+
+Option 1 is the obviously simpler of the two. For anonymous accessibility,
+both options work, making Option 1 an easy choice.
+
+However, for this use case, there are two problems:
+
+1. Inbound connections from the port proxy will not come from the LAN
+   IP address of the client, but the IP of the NAT router. MicroK8s will
+   refuse to add nodes whose self-reported machine names do not match (per or
+   DNS lookup) the name associated with their IP.
+2. Because *all* inbound connections will appear to WSL 2 as having come from
+   the router IP, it is impossible to distinguish incoming MicroK8s join
+   requests and therefore impossible to add multiple workers from the LAN.
+
+Those complications disappear with a network bridge, making Option 2 the
+necessary choice for a WSL 2 + Raspberry Pi MicroK8s cluster.
 
 ### Creating an Inbound Firewall Rules
 
