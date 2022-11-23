@@ -7,10 +7,16 @@ This repository will document resources and training to learn Kubernetes.
 * [Kubernetes Documentation](https://kubernetes.io/docs/home/)
 * [Kubernetes Tutorials](https://kubernetes.io/docs/tutorials/)
 * [Allow using podman instead of docker](https://github.com/microsoft/vscode-docker/issues/1590)
-* [Kubernetes on Windows with WSL 2 and Microk8s](https://youtu.be/DmfuJzX6vJQ)
+* [Kubernetes on Windows with WSL 2 and MicroK8s](https://youtu.be/DmfuJzX6vJQ)
 * [Nuxt Installation](https://nuxt.com/docs/getting-started/installation)
 * [Kubernetes Object Management](https://kubernetes.io/docs/concepts/overview/working-with-objects/object-management/)
 * [Getting started with Ansible](https://docs.ansible.com/ansible/latest/getting_started/index.html)
+* [Accessing network applications with WSL](https://learn.microsoft.com/en-us/windows/wsl/networking)
+* [Create a MicroK8s cluster](https://microk8s.io/docs/clustering)
+* [Create an Inbound ICMP rule](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-icmp-rule)
+* [Create an Inbound port rule](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-port-rule)
+* [WSL2-fixes](https://github.com/luxzg/WSL2-fixes)
+* [WSL 2 NIC Bridge mode](https://github.com/microsoft/WSL/issues/4150)
 
 ## Setup
 
@@ -213,3 +219,59 @@ raspberrypis:
   vars:
     ansible_user: pi
 ```
+
+### Accessing WSL 2 from a local area network (LAN)
+
+To [access a WSL 2 distribution from a LAN](https://learn.microsoft.com/en-us/windows/wsl/networking#accessing-a-wsl-2-distribution-from-your-local-area-network-lan),
+the steps are the same as for a regular virtual machine. That is, port
+forwarding (e.g., via a port proxy) is required between the Windows environment
+and the WSL 2 VM.
+
+In the following example, IP addresses for the Ubuntu WSL 2 distribution are
+captured into the `$hostnames` array. The primary IP address is then used as
+the connect address for a port proxy started by `netsh`:
+
+```ps1con
+> $hostnames = @(& wsl -d Ubuntu hostname -I) -split ' '
+> netsh interface portproxy add v4tov4 `
+    listenport=25000 listenaddress=0.0.0.0 `
+    connectport=25000 connectaddress=$hostnames[0]
+```
+
+This step is necessary to enable connecting microk8s worker instances to a main
+instance (running the control plane) running in WSL 2.
+
+### Creating an Inbound Firewall Rules
+
+To make the Windows machine reachable, the Windows Defender firewall needs to
+be configured with new rules. To be able to ping a machine, follow the link
+to
+[create an inbound ICMP rule](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-icmp-rule).
+To enable TCP access to the machine (including for specific ports or port
+ranges), follow the link to
+[create an inbound port rule](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-port-rule).
+
+### Creating a MicroK8s cluster
+
+To add nodes to the master of the cluster, run `microk8s add-node`. An
+example execution will look as follows:
+
+```shell
+> microk8s add-node
+From the node you wish to join to this cluster, run the following:
+microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
+
+Use the '--worker' flag to join a node as a worker not running the control plane, eg:
+microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8 --worker
+
+If the node you are adding is not reachable through the default interface you can use one of the following:
+microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
+```
+
+The output instructions to be executed on the MicroK8s instances that should
+join the cluster (i.e. not the node `add-node` was run from.)
+
+> NOTE: If running from WSL 2, the IP address used (in the example above,
+> 172.18.176.244) is one associated with a virtualized ethernet adapter, not
+> visible on the LAN. Follow instructions above to set up a port proxy and
+> modify the `join` commands as needed.
