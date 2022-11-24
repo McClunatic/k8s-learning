@@ -1,0 +1,4 @@
+- name: join MicroK8s cluster as worker
+  hosts: "{{ variable_host | default('k8s') }}"
+  roles:
+    - workers

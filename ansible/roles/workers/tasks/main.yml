@@ -4,7 +4,7 @@
   ansible.builtin.command: microk8s status --wait-ready
   environment:
     PATH: '${PATH}:/snap/bin/'
-# - name: join node to microk8s cluster
-#   ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
-#   environment:
-#     PATH: '${PATH}:/snap/bin/'
+- name: join node to microk8s cluster
+  ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
+  environment:
+    PATH: '${PATH}:/snap/bin/'
