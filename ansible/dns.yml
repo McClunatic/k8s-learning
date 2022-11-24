@@ -3,3 +3,12 @@
   become: true
   roles:
     - dnsservers
+- name: configure DNS server
+  hosts: k8s
+  become: true
+  tasks:
+    - name: update /etc/resolv.conf
+      ansible.builtin.copy:
+        src: resolv.conf
+        dest: /etc/resolv.conf
+        mode: '0644'
