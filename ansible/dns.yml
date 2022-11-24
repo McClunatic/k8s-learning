@@ -1,4 +1,5 @@
 - name: upgrade OS and install dnsmasq
   hosts: canary
+  become: true
   roles:
     - dnsservers

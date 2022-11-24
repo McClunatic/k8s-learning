@@ -1,6 +1,6 @@
 dnsmasq_domain_needed: true
 dnsmasq_bogus_priv: true
-dnsmasq_expand_priv: true
+dnsmasq_expand_hosts: true
 dnsmasq_domain: local
 dnsmasq_addn_hosts: /etc/additional_hosts
 dnsmasq_addn_hosts_list:
