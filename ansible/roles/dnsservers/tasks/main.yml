@@ -17,6 +17,11 @@
   ansible.builtin.template:
     dest: "{{ dnsmasq_addn_hosts }}"
     src: additional_hosts.j2
+- name: update self entry in /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: '\.*{{ inventory_hostname }}'
+    line: '{{ ansible_default_ipv4.address }} {{ inventory_hostname }}'
 - name: restart service dnsmasq
   ansible.builtin.service:
     name: dnsmasq
