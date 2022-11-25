@@ -1,5 +1,9 @@
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
+- name: reboot and await restart
+  ansible.builtin.reboot:
+  become: true
+  when: wait_ready is defined
 - name: wait for microk8s to be ready
   ansible.builtin.command: microk8s status --wait-ready
   environment:
