@@ -8,7 +8,7 @@
   become: true
   tasks:
     - name: update /etc/resolv.conf
-      ansible.builtin.copy:
-        src: resolv.conf
-        dest: /etc/resolv.conf
-        mode: '0644'
+      ansible.builtin.lineinfile:
+        path: /etc/resolv.conf
+        regexp: 'nameserver.*'
+        line: 'nameserver 192.168.1.100'
