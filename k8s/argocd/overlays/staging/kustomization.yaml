@@ -5,4 +5,5 @@ resources:
   - ../../base
 patchesStrategicMerge:
   - application-controller.yaml
-  - server.yaml
+  - server-clusterrolebinding.yaml
+  - server-service.yaml
