@@ -17,6 +17,9 @@ This repository will document resources and training to learn Kubernetes.
 * [Create an Inbound port rule](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-port-rule)
 * [WSL2-fixes](https://github.com/luxzg/WSL2-fixes)
 * [WSL 2 NIC Bridge mode](https://github.com/microsoft/WSL/issues/4150)
+* [Install Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+* [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
+* [cert-manager Installation](https://cert-manager.io/docs/installation/)
 
 ## Setup
 
@@ -313,3 +316,81 @@ join the cluster (i.e. not the node `add-node` was run from.)
 > 172.18.176.244) is one associated with a virtualized ethernet adapter, not
 > visible on the LAN. Follow instructions above to set up a port proxy and
 > modify the `join` commands as needed.
+
+### Installing cert-manager
+
+This is available as a
+[MicroK8s addon](https://microk8s.io/docs/addon-cert-manager):
+
+
+```shell
+> microk8s enable cert-manager
+```
+
+#### Creating a ClusterIssuer
+
+Enabling the `cert-manager` addon in MicroK8s results in the following
+console output:
+
+```
+...
+===========================
+
+Cert-manager is installed. As a next step, try creating a ClusterIssuer
+for Let's Encrypt by creating the following resource:
+
+$ microk8s kubectl apply -f - <<EOF
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
+    email: me@example.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: letsencrypt-account-key
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: public
+EOF
+
+Then, you can create an ingress to expose 'my-service:80' on 'https://my-service.example.com' with:
+
+$ microk8s enable ingress
+$ microk8s kubectl create ingress my-ingress \
+    --annotation cert-manager.io/cluster-issuer=letsencrypt \
+    --rule 'my-service.example.com/*=my-service:80,tls=my-service-tls'
+```
+
+In [the 
+
+
+### Installing Argo CD
+
+[Installing Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+involves...
+
+#### Generating client certificates
+
+Manual self-signed certificate generation can be handled by
+[easyrsa](https://kubernetes.io/docs/tasks/administer-cluster/certificates/#easyrsa).
+
+For setting `MASTER_IP` and `MASTER_CLUSTER_IP`, try the following:
+
+```shell
+read -a ips < <(hostname -I)
+export MASTER_IP=${ips[0]}
+export MASTER_CLUSTER_IP=$(microk8s kubectl get -n default service/kubernetes -o json | jq '.spec.clusterIP')
+```
+
+> If you're unfamiliar with `jq`, read about
+> [jq here](https://stedolan.github.io/jq/).
+
