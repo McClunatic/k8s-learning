@@ -6,4 +6,5 @@ resources:
 patchesStrategicMerge:
   - application-controller.yaml
   - server-clusterrolebinding.yaml
+  - server-ingress.yaml
   - server-service.yaml

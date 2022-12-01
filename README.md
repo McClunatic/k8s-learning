@@ -20,6 +20,7 @@ This repository will document resources and training to learn Kubernetes.
 * [Install Argo CD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 * [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
 * [cert-manager Installation](https://cert-manager.io/docs/installation/)
+* [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
 
 ## Setup
 
@@ -370,8 +371,6 @@ $ microk8s kubectl create ingress my-ingress \
     --rule 'my-service.example.com/*=my-service:80,tls=my-service-tls'
 ```
 
-In [the 
-
 
 ### Installing Argo CD
 
@@ -394,3 +393,19 @@ export MASTER_CLUSTER_IP=$(microk8s kubectl get -n default service/kubernetes -o
 > If you're unfamiliar with `jq`, read about
 > [jq here](https://stedolan.github.io/jq/).
 
+####
+
+May need to patch ingress deployment...
+https://github.com/kubernetes/minikube/issues/6403
+
+Yup.
+
+```shell
+> k patch daemonset -n ingress nginx-ingress-microk8s-controller \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--enable-ssl-passthrough"}]'
+```
+
+#### Baremetal considerations for nginx ingress
+
+https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#over-a-nodeport-service
