@@ -4,7 +4,6 @@ namespace: argocd-staging
 resources:
   - ../../base
 patchesStrategicMerge:
-  - application-controller.yaml
+  - application-controller-clusterrolebinding.yaml
   - server-clusterrolebinding.yaml
   - server-ingress.yaml
-  - server-service.yaml
