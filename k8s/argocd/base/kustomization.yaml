@@ -6,4 +6,5 @@ namespace: argocd
 resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.3/manifests/install.yaml
   - namespace.yaml
-  - server-ingress.yaml
+patchesStrategicMerge:
+  - server-service.yaml
