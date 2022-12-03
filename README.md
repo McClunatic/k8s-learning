@@ -301,76 +301,17 @@ example execution will look as follows:
 ```shell
 > microk8s add-node
 From the node you wish to join to this cluster, run the following:
-microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
+microk8s join 192.168.1.38:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
 
 Use the '--worker' flag to join a node as a worker not running the control plane, eg:
-microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8 --worker
+microk8s join 192.168.1.38:25000/897fea98332cec0bb9629751b236d055/a22af98532f8 --worker
 
 If the node you are adding is not reachable through the default interface you can use one of the following:
-microk8s join 172.18.176.244:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
+microk8s join 192.168.1.38:25000/897fea98332cec0bb9629751b236d055/a22af98532f8
 ```
 
 The output instructions to be executed on the MicroK8s instances that should
 join the cluster (i.e. not the node `add-node` was run from.)
-
-> NOTE: If running from WSL 2, the IP address used (in the example above,
-> 172.18.176.244) is one associated with a virtualized ethernet adapter, not
-> visible on the LAN. Follow instructions above to set up a port proxy and
-> modify the `join` commands as needed.
-
-### Installing cert-manager
-
-This is available as a
-[MicroK8s addon](https://microk8s.io/docs/addon-cert-manager):
-
-
-```shell
-> microk8s enable cert-manager
-```
-
-#### Creating a ClusterIssuer
-
-Enabling the `cert-manager` addon in MicroK8s results in the following
-console output:
-
-```
-...
-===========================
-
-Cert-manager is installed. As a next step, try creating a ClusterIssuer
-for Let's Encrypt by creating the following resource:
-
-$ microk8s kubectl apply -f - <<EOF
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt
-spec:
-  acme:
-    # You must replace this email address with your own.
-    # Let's Encrypt will use this to contact you about expiring
-    # certificates, and issues related to your account.
-    email: me@example.com
-    server: https://acme-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      # Secret resource that will be used to store the account's private key.
-      name: letsencrypt-account-key
-    # Add a single challenge solver, HTTP01 using nginx
-    solvers:
-    - http01:
-        ingress:
-          class: public
-EOF
-
-Then, you can create an ingress to expose 'my-service:80' on 'https://my-service.example.com' with:
-
-$ microk8s enable ingress
-$ microk8s kubectl create ingress my-ingress \
-    --annotation cert-manager.io/cluster-issuer=letsencrypt \
-    --rule 'my-service.example.com/*=my-service:80,tls=my-service-tls'
-```
-
 
 ### Installing Argo CD
 
@@ -393,7 +334,7 @@ export MASTER_CLUSTER_IP=$(microk8s kubectl get -n default service/kubernetes -o
 > If you're unfamiliar with `jq`, read about
 > [jq here](https://stedolan.github.io/jq/).
 
-####
+#### Cool little things about K8s
 
 May need to patch ingress deployment...
 https://github.com/kubernetes/minikube/issues/6403
