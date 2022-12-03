@@ -3,5 +3,4 @@ kind: Service
 metadata:
   name: argocd-server
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 192.168.1.223
+  type: ClusterIP
