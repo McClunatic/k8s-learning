@@ -350,3 +350,18 @@ Yup.
 #### Baremetal considerations for nginx ingress
 
 https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#over-a-nodeport-service
+
+#### Patches
+
+```shell
+# Necessary to allow SSL passthrough to ArgoCD Server
+> k patch daemonset -n ingress nginx-ingress-microk8s-controller \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--enable-ssl-passthrough"}]'
+# Necessary for site to be regarded as secure by Edge using https
+# The browser seems to recognize that the same port was being used
+# for insecure traffic
+> k patch svc -n argocd argocd-server \
+    --type=json
+    -p='[{"op": "remove", "path": "/spec/ports/0"}]'
+```
