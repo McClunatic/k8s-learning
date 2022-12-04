@@ -365,3 +365,26 @@ https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#over-a-nodeport-ser
     --type=json
     -p='[{"op": "remove", "path": "/spec/ports/0"}]'
 ```
+
+### Running Tekton CLI
+
+The `tkn` CLI needs to be able to read a `kubeconfig` file. When using
+MicroK8s, the default file is neither `~/.kube/config` or is it given by
+environment variable `KUBECONFIG`. By running:
+
+```shell
+> k get pods -v=6
+```
+
+You will see output like the following:
+
+```
+I1204 07:52:59.522754  200900 loader.go:374] Config loaded from file:  /var/snap/microk8s/4221/credentials/client.config
+```
+
+That instance identifier `4221` in the example above is symbolically linked
+to `current`, so one solution for getting `tkn` to work is to use:
+
+```shell
+> alias tkn="env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config"
+```
