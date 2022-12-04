@@ -392,10 +392,26 @@ to `current`, so one solution for getting `tkn` to work is to use:
 
 ### Creating a Kubernetes Dashboard user
 
-Once a user `admin-user` is created you can run:
+After following the guidance to
+[create a user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md),
+say `admin-user`, generate tokens to authenticate to the Kubernetes Dashboard
+by running:
 
 ```shell
 > k create token admin-user
 ```
 
-Use that at the prompt when opening the Dashboard.
+#### Secrets and patches
+
+```shell
+# Needs to hold CA-signed tls.crt and tls.key
+> k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
+# Update deployment per
+# https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#recommended-setup
+> k patch deployments.apps -n kube-system kubernetes-dashboard \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-cert-file=/tls.crt"}]'
+> k patch deployments.apps -n kube-system kubernetes-dashboard \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-key-file=/tls.key"}]'
+```
