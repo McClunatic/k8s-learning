@@ -21,6 +21,7 @@ This repository will document resources and training to learn Kubernetes.
 * [Generate Certificates Manually](https://kubernetes.io/docs/tasks/administer-cluster/certificates/)
 * [cert-manager Installation](https://cert-manager.io/docs/installation/)
 * [Manage TLS Certificates in a Cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
+* [Creating sample user](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
 
 ## Setup
 
@@ -388,3 +389,13 @@ to `current`, so one solution for getting `tkn` to work is to use:
 ```shell
 > alias tkn="env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config"
 ```
+
+### Creating a Kubernetes Dashboard user
+
+Once a user `admin-user` is created you can run:
+
+```shell
+> k create token admin-user
+```
+
+Use that at the prompt when opening the Dashboard.

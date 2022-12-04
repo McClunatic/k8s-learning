@@ -1,0 +1,26 @@
+# https://tekton.dev/docs/dashboard/install/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  ingressClassName: public
+  # tls:
+  # - hosts:
+  #   - kubernetes-dashboard.k8s.local
+  #   secretName: kubernetes-dashboard-tls
+  rules:
+  - host: kubernetes-dashboard.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
