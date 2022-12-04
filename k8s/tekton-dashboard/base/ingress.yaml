@@ -1,0 +1,19 @@
+# https://tekton.dev/docs/dashboard/install/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tekton-dashboard
+  namespace: tekton-pipelines
+spec:
+  ingressClassName: public
+  rules:
+  - host: tekton-dashboard.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tekton-dashboard
+            port:
+              number: 9097

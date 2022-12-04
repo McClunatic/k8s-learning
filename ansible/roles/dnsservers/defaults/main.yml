@@ -12,4 +12,6 @@ dnsmasq_addn_hosts_list:
   - 192.168.1.103   raspberrypi-3
   # ArgoCD Server
   # TODO: Fix this IP in Kustomize config
-  - 192.168.1.192   argocd-server.k8s.local
+  - >
+      192.168.1.192   argocd-server.k8s.local
+      tekton-dashboard.k8s.local

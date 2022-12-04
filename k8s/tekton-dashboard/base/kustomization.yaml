@@ -4,3 +4,4 @@ kind: Kustomization
 
 resources:
 - https://storage.googleapis.com/tekton-releases/dashboard/previous/v0.30.0/tekton-dashboard-release.yaml
+- ingress.yaml
