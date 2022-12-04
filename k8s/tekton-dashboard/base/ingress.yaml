@@ -6,6 +6,10 @@ metadata:
   namespace: tekton-pipelines
 spec:
   ingressClassName: public
+  tls:
+  - hosts:
+    - tekton-dashboard.k8s.local
+    secretName: tekton-dashboard-tls
   rules:
   - host: tekton-dashboard.k8s.local
     http:
