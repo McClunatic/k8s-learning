@@ -1,1 +1,3 @@
-site_name: My Docs
+site_name: McCl8s
+theme:
+  name: material
