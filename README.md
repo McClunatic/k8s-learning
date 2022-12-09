@@ -363,7 +363,7 @@ https://kubernetes.github.io/ingress-nginx/deploy/baremetal/#over-a-nodeport-ser
 # The browser seems to recognize that the same port was being used
 # for insecure traffic
 > k patch svc -n argocd argocd-server \
-    --type=json
+    --type=json \
     -p='[{"op": "remove", "path": "/spec/ports/0"}]'
 ```
 
