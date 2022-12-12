@@ -122,7 +122,9 @@ the following steps:
 > NOTE: [docker.host](https://github.com/microsoft/vscode-docker/issues/3539)
 > was deprecated and removed as of Docker extension version 1.23. The new
 > extension allows the user to specify environment variable/value pairs, but
-> `DOCKER_HOST` does not work as of this writing.
+> `DOCKER_HOST` does not work as of this writing. Follow
+> [this issue](https://github.com/microsoft/vscode-docker/issues/3766) to
+> track changes.
 
 ## MicroK8s
 
