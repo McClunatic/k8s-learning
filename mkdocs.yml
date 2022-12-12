@@ -4,3 +4,5 @@ theme:
 nav:
   - topics.md
   - setup.md
+markdown_extensions:
+- pymdownx.snippets
