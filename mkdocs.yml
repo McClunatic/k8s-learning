@@ -1,3 +1,6 @@
 site_name: McCl8s
 theme:
   name: material
+nav:
+  - topics.md
+  - setup.md
