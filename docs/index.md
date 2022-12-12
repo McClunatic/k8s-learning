@@ -12,3 +12,6 @@ platform for experimentation and learning.
   targeted for learning as part of building McCl8s.
 * [Setup](setup.md): Covers configuration and installation of
   foundation hardware and software used to build McCl8s.
+* [Cluster setup with Ansible](ansible_cluster.md): Covers automation
+  of configuration and software installs for Raspberry Pi cluster
+  workers using Ansible.
