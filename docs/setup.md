@@ -6,11 +6,11 @@ Raspberry Pi 3 machines are used as worker nodes.
 
 In this section we'll cover setup, installation, and configuration work for:
 
-1. [#wsl-2]
-2. [#windows-firewall]
-3. [#podman]
-4. [#microk8s]
-5. [#ansible]
+1. [WSL-2](#wsl-2)
+2. [Windows firewall](#windows-firewall)
+3. [Podman](#podman)
+4. [MicroK8s](#microk8s)
+5. [Ansible](#ansible)
 
 ## WSL 2
 
@@ -132,7 +132,7 @@ installed takes a few steps.
 
 ### Enabling `systemd`
 
-If `systemd` was not enabled as part of configuring [#wsl-2], read more
+If `systemd` was not enabled as part of configuring [WSL 2](#wsl-2), read more
 about how to enable it in this
 [Microsoft developer blog](https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/).
 It's a prerequisite for `snap`, which comes next.
@@ -162,7 +162,7 @@ Hello World!
 ### Installing MicroK8s
 
 [MicroK8s](https://microk8s.io/#install-microk8s) can be installed as a `snap`
-package after [#installing-snapd]:
+package after [Installing `snapd`](#installing-snapd):
 
 ```shell
 > sudo snap install microk8s --classic
