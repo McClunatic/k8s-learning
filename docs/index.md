@@ -1,17 +1,14 @@
-# Welcome to MkDocs
+# McCl8s
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+McCl8s is a tongue-in-cheek portmanteau of my last name and
+[Kubernetes](https://kubernetes.io), or K8s. It is **not** a custom
+implementation of K8s, but a name for the collection of applications
+and resources deployed using [MicroK8s](https://microk8s.io) as a
+platform for experimentation and learning.
 
-## Commands
+## Sections
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+* [Learning topics](topics.md): Outlines the tools and concepts
+  targeted for learning as part of building McCl8s.
+* [Setup](setup.md): Covers configuration and installation of
+  foundation hardware and software used to build McCl8s.
