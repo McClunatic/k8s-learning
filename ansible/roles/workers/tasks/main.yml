@@ -9,7 +9,10 @@
   environment:
     PATH: '{{ ansible_env.PATH }}:/snap/bin'
   when: wait_ready is defined
+  timeout: 600
 - name: join node to microk8s cluster
-  ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
+  # TODO: Add --worker here when running latest microk8s
+  ansible.builtin.command: microk8s join "{{ microk8s_instance }}"
   environment:
     PATH: '{{ ansible_env.PATH }}:/snap/bin'
+  timeout: 600
