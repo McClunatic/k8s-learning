@@ -39,14 +39,13 @@ We will use addons to enable:
 * `dns`: CoreDNS
 * `ingress`: A simple ingress controller for external access
 * `metallb`: The [MetalLB](https://metallb.universe.tf/) LoadBalancer
-* `storage`: A default storage class (replaced by `hostpath-storage` in
-   latest versions of `microk8s`)
+* `hostpath-storage`: A default storage class
 
 We can do that in one line (here providing `metallb` with an IP address
 range to use for LoadBalancers) like this:
 
 ```shell
-> microk8s enable dashboard dns ingress metallb:192.168.1.192/27 storage
+> microk8s enable dashboard dns ingress metallb:192.168.1.192/27 hostpath-storage
 ```
 
 ## `kubectl`
