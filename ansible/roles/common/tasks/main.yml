@@ -24,7 +24,7 @@
   community.general.snap:
     name: microk8s
     classic: true
-    channel: 1.22/stable  # Maximum supported by Charmed Kubeflow 1.6
+    channel: 1.24/stable  # Maximum supported by Charmed Kubeflow 1.6
   become: true
 - name: add user to microk8s group
   ansible.builtin.user:

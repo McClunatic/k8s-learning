@@ -11,8 +11,7 @@
   when: wait_ready is defined
   timeout: 600
 - name: join node to microk8s cluster
-  # TODO: Add --worker here when running latest microk8s
-  ansible.builtin.command: microk8s join "{{ microk8s_instance }}"
+  ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
   environment:
     PATH: '{{ ansible_env.PATH }}:/snap/bin'
   timeout: 600
