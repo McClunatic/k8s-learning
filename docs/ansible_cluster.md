@@ -155,5 +155,5 @@ URL:
 
 ```shell
 > ansible-playbook -i inventory.yml k8sworkers.yml \
-    --extra-vars "microk8s_instance=$(microk8s add-node --token-ttl 3600 | grep join | tail -1 | cut -d' ' -f3)"
+    --extra-vars "microk8s_instance=$(microk8s add-node --token-ttl 3600 | grep microk8s | head -1 | cut -d' ' -f3)"
 ```

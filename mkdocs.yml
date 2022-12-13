@@ -5,5 +5,6 @@ nav:
   - topics.md
   - setup.md
   - ansible_cluster.md
+  - k8s_management.md
 markdown_extensions:
 - pymdownx.snippets
