@@ -1,6 +1,22 @@
 site_name: McCl8s
 theme:
   name: material
+  palette:
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: pink
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: pink
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
 nav:
   - topics.md
   - setup.md
