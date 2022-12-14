@@ -10,9 +10,9 @@ dnsmasq_addn_hosts_list:
   - 192.168.1.101   raspberrypi-1
   - 192.168.1.102   raspberrypi-2
   - 192.168.1.103   raspberrypi-3
-  # ArgoCD Server
-  # TODO: Fix this IP in Kustomize config
+  # NOTE: IPs assigned depend on order of deployment
   - >
       192.168.1.192   argocd-server.k8s.local
       tekton-dashboard.k8s.local
       kubernetes-dashboard.k8s.local
+  - 192.168.1.193   kubeflow-dashboard.k8s.local
