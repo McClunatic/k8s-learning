@@ -72,6 +72,31 @@ by running:
 >   and updating the `kubernetes-dashboard-certs` secret is an option to
 >   serve a trusted Dashboard.
 
+Provided a `./certs` directory with a `tls.crt` and `tls.key`, run the following
+to get replace the self-signed default certificates with one of your own:
+
+```shell
+# Needs to hold CA-signed tls.crt and tls.key
+> k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
+# Update deployment per
+# https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#recommended-setup
+> k patch deployments.apps -n kube-system kubernetes-dashboard \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-cert-file=/tls.crt"}]'
+> k patch deployments.apps -n kube-system kubernetes-dashboard \
+    --type=json \
+    -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-key-file=/tls.key"}]'
+```
+
+When visiting the Kubernetes Dashboard, a token will be required for access.
+Use the `admin-user` to generate one by running:
+
+```shell
+> k create -n kube-system token admin-user
+```
+
+Enter the displayed token where prompted in the Dashboad.
+
 ## Tekton
 
 Per [Tekton documentation](https://tekton.dev/docs/),
@@ -114,4 +139,27 @@ With the secret available, apply the dashboard kustomizations:
 
 ```shell
 > k apply -k k8s/tekton-dashboard/overlays/prod
+```
+
+### Setting up Tekton CLI
+
+The `tkn` CLI needs to be able to read a `kubeconfig` file. When using
+MicroK8s, the default file is neither `~/.kube/config` or is it given by
+environment variable `KUBECONFIG`. By running:
+
+```shell
+> k get pods -v=6
+```
+
+You will see output like the following:
+
+```shell
+I1204 07:52:59.522754  200900 loader.go:374] Config loaded from file:  /var/snap/microk8s/4221/credentials/client.config
+```
+
+That instance identifier `4221` in the example above is symbolically linked
+to `current`, so one solution for getting `tkn` to work is to use:
+
+```shell
+> alias tkn="env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config"
 ```

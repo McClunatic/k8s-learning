@@ -194,11 +194,18 @@ Per
 > zero downtime rolling updates.
 
 To configure and deploy software to the cluster's Raspberry Pi worker nodes,
-we'll use Ansible. It can be
+we'll use Ansible.  Installing Ansible (on what will be the *control node*)
+requires a Python 3.8 or higher on the system, with pip installed as well. To
+ensure pip is installed on Ubuntu 22.04 LTS, for example, run:
+
+```shell
+> sudo apt install python3-pip python3-pip-whl
+```
+
+Once done, Ansible can be
 [user installed](https://pip.pypa.io/en/latest/user_guide/#user-installs)
 by running:
 
 ```shell
-> sudo apt update && sudo apt install -y python3-pip
 > pip3 install --user ansible
 ```

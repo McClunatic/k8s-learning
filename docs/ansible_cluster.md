@@ -26,7 +26,78 @@ can run automation tasks on multiple hosts at the same time. With an inventory
 defined, you can use patterns to select the hosts or groups for Ansible to run
 against.
 
-Our inventory looks like this:
+For example, with a cluster of 4 Raspberry Pi systems with a default user `pi`,
+an inventory might look like this:
+
+```ini
+[raspberrypis]
+192.168.1.100
+192.168.1.101
+192.168.1.102
+192.168.1.103
+
+[raspberrypis:vars]
+ansible_user=pi
+```
+
+> The `ansible_user` ensures connections are established using the `pi` user
+> if the user on the control node is another username.
+
+The default location for the inventory file is `/etc/ansible/hosts`.
+One can use another location and specify that file when running ansible
+commands (here, with `-i ~/.ansible/etc/hosts`):
+
+```shell
+> ansible -i ~/.ansible/etc/hosts raspberrypis -m ping
+192.168.1.102 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.101 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.100 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.1.103 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
+
+A richer format for an inventory file is YAML. Here, we modify the previous
+example to provide named hosts for each IP:
+
+```yaml
+raspberrypis:
+  hosts:
+    raspberrypi-0:
+      ansible_host: 192.168.1.100
+    raspberrypi-1:
+      ansible_host: 192.168.1.101
+    raspberrypi-2:
+      ansible_host: 192.168.1.102
+    raspberrypi-3:
+      ansible_host: 192.168.1.103
+  vars:
+    ansible_user: pi
+```
+
+The inventory we'll use throughout this documentation looks like:
 
 ```yaml
 --8<-- "ansible/inventory.yml"
