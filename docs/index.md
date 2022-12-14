@@ -15,3 +15,9 @@ platform for experimentation and learning.
 * [Cluster setup with Ansible](ansible_cluster.md): Covers automation
   of configuration and software installs for Raspberry Pi cluster
   workers using Ansible.
+* [Managing a K8s cluster](k8s_management.md): Provides an overview
+  of options for managing resources in a Kubernetes cluster.
+* [First deployments](first_deployments.md): Serves as a guide for
+  creating and modifying our first Kubernetes resources.
+* [Kubeflow](kubeflow.md): Introduces Kubeflow and provides guidance
+  for deployment.

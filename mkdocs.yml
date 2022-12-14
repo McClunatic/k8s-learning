@@ -22,6 +22,7 @@ nav:
   - setup.md
   - ansible_cluster.md
   - k8s_management.md
+  - first_deployments.md
   - kubeflow.md
 markdown_extensions:
 - pymdownx.snippets
