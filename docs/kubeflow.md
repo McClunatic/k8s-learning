@@ -38,7 +38,7 @@ With `microk8s` and `juju` already installed, the steps are:
 2. Add a model! For Kubeflow, the model **must** be named `kubeflow`:
 
    ```shell
-   > juju add-model `kubeflow`
+   > juju add-model kubeflow
    ```
 
 3. Deploy a Kubeflow bundle. We will deploy a lighter option, `kubeflow-lite`:
