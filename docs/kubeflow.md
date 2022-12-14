@@ -10,6 +10,16 @@ Per the [Kubeflow documentation](https://www.kubeflow.org/docs/),
 
 ## Installation
 
+> NOTE: As of this writing, the installation guidance only works for a
+> single-node MicroK8s cluster. Do not add the Pi nodes as workers. The
+> first apparent issue: the `hostpath-storage` addon creates a PersistentVolume
+> on the master node (`zephyrus`) but the PersistentVolumeClaim (PVC) created
+> by Juju as part of installing Kubeflow maps to a Pi node, meaning the
+> PVC will pend indefinitely.
+>
+> It is also possible that the RAM requirements of Kubeflow would exceed
+> those available on the Pi nodes.
+
 As discussed in [Managing a K8s cluster](k8s_management.md#juju), we will
 install
 [Charmed Kubeflow using `juju`](https://charmed-kubeflow.io/docs/quickstart).
