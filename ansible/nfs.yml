@@ -1,0 +1,5 @@
+- name: upgrade OS and install nfs-kernel-server
+  hosts: canary
+  become: true
+  roles:
+    - nfsservers

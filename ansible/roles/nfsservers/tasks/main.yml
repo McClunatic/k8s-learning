@@ -1,0 +1,25 @@
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+- name: run apt install nfs-kernel-server
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+- name: create and permission nfs share
+  ansible.builtin.file:
+    path: "{{ nfs_share }}"
+    state: directory
+    recurse: true
+    owner: pi
+    group: pi
+    mode: '0755'
+- name: add nfs share to exports
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    state: present
+    line: '{{ nfs_share }} {{ ip_range }}{{ options }}'
+  notify: restart nfs server
+- name: export share
+  ansible.builtin.command: exportfs -rav
