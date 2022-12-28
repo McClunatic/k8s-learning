@@ -1,8 +1,11 @@
 # https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#kustomize
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 namespace: nfs-provisioner
-bases:
-  - github.com/kubernetes-sigs/nfs-subdir-external-provisioner/deploy
 resources:
   - namespace.yaml
-patchesStrategicMerge:
-  - patch_nfs_details.yaml
+  - class.yaml
+  - deployment.yaml
+  - rbac.yaml
