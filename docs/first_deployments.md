@@ -7,7 +7,7 @@ With [setup](setup.md) complete, we can begin deployments.
 To start, let's enable the standard Kubernetes dashboard:
 
 ```shell
-> microk8s enable dashboard
+microk8s enable dashboard
 ```
 
 Then, enable addons that will be required to install Kubeflow.
@@ -15,7 +15,7 @@ In the below example, we can also set an IP range for
 `metallb` to use for external IPs:
 
 ```shell
-> microk8s enable dns hostpath-storage ingress metallb:192.168.1.192/27
+microk8s enable dns hostpath-storage ingress metallb:192.168.1.192/27
 ```
 
 ## Patching the ingress controller
@@ -27,7 +27,7 @@ to allow passthrough backends to Ingress objects. Do that by running the
 following:
 
 ```shell
-> k patch daemonset -n ingress nginx-ingress-microk8s-controller \
+k patch daemonset -n ingress nginx-ingress-microk8s-controller \
     --type=json \
     -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--enable-ssl-passthrough"}]'
 ```
@@ -48,7 +48,7 @@ in
 Using our `prod` overlay, apply the service by running:
 
 ```shell
-> k apply -k k8s/nginx-ingress/overlays/prod
+k apply -k k8s/nginx-ingress/overlays/prod
 ```
 
 ## Exposing the Kubernetes Dashboard
@@ -59,7 +59,7 @@ Kustomize resources prepared for the dashboard. Apply those kustomizations
 by running:
 
 ```shell
-> k apply -k k8s/kubernetes-dashboard/overlays/prod
+k apply -k k8s/kubernetes-dashboard/overlays/prod
 ```
 
 > Beyond the scope of the current documentation:
@@ -77,13 +77,13 @@ to get replace the self-signed default certificates with one of your own:
 
 ```shell
 # Needs to hold CA-signed tls.crt and tls.key
-> k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
+k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
 # Update deployment per
 # https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#recommended-setup
-> k patch deployments.apps -n kube-system kubernetes-dashboard \
+k patch deployments.apps -n kube-system kubernetes-dashboard \
     --type=json \
     -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-cert-file=/tls.crt"}]'
-> k patch deployments.apps -n kube-system kubernetes-dashboard \
+k patch deployments.apps -n kube-system kubernetes-dashboard \
     --type=json \
     -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--tls-key-file=/tls.key"}]'
 ```
@@ -92,7 +92,7 @@ When visiting the Kubernetes Dashboard, a token will be required for access.
 Use the `admin-user` to generate one by running:
 
 ```shell
-> k create -n kube-system token admin-user
+k create -n kube-system token admin-user
 ```
 
 Enter the displayed token where prompted in the Dashboad.
@@ -112,8 +112,8 @@ To deploy Tekton Pipelines and Tekton Triggers, apply the following
 kustomizations:
 
 ```shell
-> k apply -k k8s/tekton-pipelines/overlays/prod
-> k apply -k k8s/tekton-triggers/overlays/prod
+k apply -k k8s/tekton-pipelines/overlays/prod
+k apply -k k8s/tekton-triggers/overlays/prod
 ```
 
 ### Deploying the Dashboard
@@ -130,7 +130,7 @@ To create the `tekton-dashboard-tls` certificate, refer to our certificate
 and key by running:
 
 ```shell
-> k create -n tekton-pipelines secret tls tekton-dashboard-tls \
+k create -n tekton-pipelines secret tls tekton-dashboard-tls \
     --cert=certificates/tekton-dashboard-fullchain.pem \
     --key=certificates/tekton-dashboard-key.pem
 ```
@@ -138,7 +138,7 @@ and key by running:
 With the secret available, apply the dashboard kustomizations:
 
 ```shell
-> k apply -k k8s/tekton-dashboard/overlays/prod
+k apply -k k8s/tekton-dashboard/overlays/prod
 ```
 
 ### Setting up Tekton CLI
@@ -148,7 +148,7 @@ MicroK8s, the default file is neither `~/.kube/config` or is it given by
 environment variable `KUBECONFIG`. By running:
 
 ```shell
-> k get pods -v=6
+k get pods -v=6
 ```
 
 You will see output like the following:
@@ -161,5 +161,5 @@ That instance identifier `4221` in the example above is symbolically linked
 to `current`, so one solution for getting `tkn` to work is to use:
 
 ```shell
-> alias tkn="env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config"
+alias tkn="env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config"
 ```

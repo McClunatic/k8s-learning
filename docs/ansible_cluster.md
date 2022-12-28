@@ -48,7 +48,7 @@ One can use another location and specify that file when running ansible
 commands (here, with `-i ~/.ansible/etc/hosts`):
 
 ```shell
-> ansible -i ~/.ansible/etc/hosts raspberrypis -m ping
+ansible -i ~/.ansible/etc/hosts raspberrypis -m ping
 192.168.1.102 | SUCCESS => {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python3"
@@ -173,7 +173,7 @@ changes on our `canary` host before rolling out to `k8s` hosts.
 Playbooks are run using the `ansible-playbook` CLI:
 
 ```shell
-> ansible-playbook -h
+ansible-playbook -h
 ```
 
 For our playbooks, we'll run them with one other argument to indicate the
@@ -181,8 +181,8 @@ inventory file to use. For example, running the `site.yml` playbook
 from our `ansible/` repository directory looks like this:
 
 ```shell
-> cd ansible/
-> ansible-playbook -i inventory.yml site.yml
+cd ansible/
+ansible-playbook -i inventory.yml site.yml
 ```
 
 The more interesting playbook is our `k8sworkers.yml` playbook. To
@@ -190,7 +190,7 @@ The more interesting playbook is our `k8sworkers.yml` playbook. To
 follow command must first be run from cluster master node:
 
 ```shell
-> microk8s add-node
+microk8s add-node
 ```
 
 It outputs instructions like the following, which include URLs with unique
@@ -217,7 +217,7 @@ awaiting it via the variable `microk8s_instance`
 Running that playbook might look like this:
 
 ```shell
-> ansible-playbook -i inventory.yml k8sworkers.yml \
+ansible-playbook -i inventory.yml k8sworkers.yml \
     --extra-vars "microk8s_instance=192.168.1.230:25000/92b2db237428470dc4fcfc4ebbd9dc81/2c0cb3284b05"
 ```
 
@@ -225,6 +225,6 @@ Here's a handy one-liner to both extend the token expiry time and capture the
 URL:
 
 ```shell
-> ansible-playbook -i inventory.yml k8sworkers.yml \
+ansible-playbook -i inventory.yml k8sworkers.yml \
     --extra-vars "microk8s_instance=$(microk8s add-node --token-ttl 3600 | grep microk8s | head -1 | cut -d' ' -f3)"
 ```

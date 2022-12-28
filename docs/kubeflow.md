@@ -28,7 +28,7 @@ With `microk8s` and `juju` already installed, the steps are:
 1. Bootstrap Juju to MicroK8s, deploying a controller to MicroK8s' Kubernetes:
 
    ```shell
-   > juju bootstrap microk8s
+   juju bootstrap microk8s
    ```
 
    The contoller is Juju's agent, running on Kubernetes, which can be used to
@@ -38,19 +38,19 @@ With `microk8s` and `juju` already installed, the steps are:
 2. Add a model! For Kubeflow, the model **must** be named `kubeflow`:
 
    ```shell
-   > juju add-model kubeflow
+   juju add-model kubeflow
    ```
 
 3. Deploy a Kubeflow bundle. We will deploy a lighter option, `kubeflow-lite`:
 
    ```shell
-   > juju deploy kubeflow-lite --trust
+   juju deploy kubeflow-lite --trust
    ```
 
 4. Wait for and monitor the deployment process. It can take tens of minutes:
 
    ```shell
-   > watch -c juju status --color
+   watch -c juju status --color
    ```
 
 ## Dashboard access
@@ -61,7 +61,7 @@ find the external IP assigned to its LoadBalancer. To do that, run the
 following:
 
 ```shell
-> k -n kubeflow get svc istio-ingressgateway-workload \
+k -n kubeflow get svc istio-ingressgateway-workload \
     -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 ```
 
@@ -71,8 +71,8 @@ For this documentation, we will presume the IP is `192.168.1.193`.
 Next, set up [Dex](https://dexidp.io/) authentication credentials:
 
 ```shell
-> juju config dex-auth static-username=admin
-> juju config dex-auth static-password=password
+juju config dex-auth static-username=admin
+juju config dex-auth static-password=password
 ```
 
 > NOTE: These are trivial credentials, feel free to choose a more secure

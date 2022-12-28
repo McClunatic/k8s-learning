@@ -45,7 +45,7 @@ We can do that in one line (here providing `metallb` with an IP address
 range to use for LoadBalancers) like this:
 
 ```shell
-> microk8s enable dashboard dns ingress metallb:192.168.1.192/27 hostpath-storage
+microk8s enable dashboard dns ingress metallb:192.168.1.192/27 hostpath-storage
 ```
 
 ## `kubectl`
@@ -65,7 +65,7 @@ An example of something to patch is the `ingress` controller, to enable
 SSL passthrough for services that need to handle TLS themselves.
 
 ```shell
-> k patch daemonset -n ingress nginx-ingress-microk8s-controller \
+k patch daemonset -n ingress nginx-ingress-microk8s-controller \
     --type=json \
     -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--enable-ssl-passthrough"}]'
 ```
@@ -75,14 +75,14 @@ Secrets can be created of different kinds, including `tls` and Opaque
 TLS certificate and key files from a `./certs/` directory, you can run:
 
 ```shell
-> k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
+k create secret generic -n kube-system kubernetes-dashboard-certs --from-file=./certs
 ```
 
 Tokens can be created to provide user credentials. For example, to generate
 a token for `admin-user` you can run:
 
 ```shell
-> k create token admin-user
+k create token admin-user
 ```
 
 > NOTE: In the above commands, `microk8s kubectl` has been aliased to `k`.

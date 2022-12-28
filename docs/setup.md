@@ -103,9 +103,9 @@ is straightforward for most Linux OSes, with packages available in most
 official repositories. It can be installed in Ubuntu as follows:
 
 ```shell
-> # Ubuntu 20.10 and newer
-> sudo apt-get -y update
-> sudo apt-get -y install podman
+# Ubuntu 20.10 and newer
+sudo apt-get -y update
+sudo apt-get -y install podman
 ```
 
 ## VS Code
@@ -145,8 +145,8 @@ Snaps are app packages for Linux that are cross-platform and dependency-free.
 `snapd` can be installed on Ubuntu (if not already installed) by running:
 
 ```shell
-> sudo apt update
-> sudo apt install snapd
+sudo apt update
+sudo apt install snapd
 ```
 
 As discussed on
@@ -155,11 +155,16 @@ you can optionally test `snap` after restarting by installing and running
 a *hello-world* snap:
 
 ```shell
-> sudo snap install hello-world
-hello-world 6.4 from Canonical✓ installed
-> hello-world
-Hello World!
+sudo snap install hello-world
 ```
+
+`hello-world 6.4 from Canonical✓ installed`
+
+```shell
+hello-world
+```
+
+`Hello World!`
 
 ### Installing MicroK8s
 
@@ -167,19 +172,19 @@ Hello World!
 package after [Installing `snapd`](#installing-snapd):
 
 ```shell
-> sudo snap install microk8s --classic
+sudo snap install microk8s --classic
 ```
 
 Once MicroK8s is installed, you can check its status while it starts:
 
 ```shell
-> microk8s status --wait-ready
+microk8s status --wait-ready
 ```
 
 The Kubernetes CLI, `kubectl`, is available as a `microk8s` subcommand:
 
 ```shell
-> microk8s kubectl -h
+microk8s kubectl -h
 ```
 
 For convenience, consider aliasing `microk8s kubectl`!
@@ -199,7 +204,7 @@ requires a Python 3.8 or higher on the system, with pip installed as well. To
 ensure pip is installed on Ubuntu 22.04 LTS, for example, run:
 
 ```shell
-> sudo apt install python3-pip python3-pip-whl
+sudo apt install python3-pip python3-pip-whl
 ```
 
 Once done, Ansible can be
@@ -207,5 +212,5 @@ Once done, Ansible can be
 by running:
 
 ```shell
-> pip3 install --user ansible
+pip3 install --user ansible
 ```
