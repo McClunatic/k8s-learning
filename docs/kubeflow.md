@@ -84,3 +84,40 @@ log in using your chosen credentials.
 > NOTE: As of this writing, only *insecure* HTTP access is working. Secure
 > HTTP access is being refused. Documentation will be updated when this is
 > resolved.
+
+## Challenges
+
+### JupyterHub
+
+With JupyterHub, there were a couple problems:
+
+1. **Version assumptions in the Dashboard.** The Kubeflow Dashboard *Notebooks*
+   links make assumptions about the API endpoints of the running JupyterLab
+   servers. Trying to run the latest Jupyter images (e.g.,
+   ``tensorflow/tensorflow:latest-jupyter``) causes errors when trying to
+   connect to the running notebook.
+2. **Inability to save notebooks.** The notebooks ran fine when selecting
+   older images (such as those suggested in the images dropdown) but were
+   not saveable. JupyterLab would regularly display an error modal window
+   indicating that autosave could not be completed because the targeted
+   location on disk was read-only.
+
+### Kubeflow Pipelines
+
+Kubeflow Pipelines worked fine when using the Kubeflow Pipelines compiler,
+as demonstrated in the
+[Charmed Kubeflow example](https://charmed-kubeflow.io/docs/get-started-with-charmed-kubeflow#heading--kubeflow-pipeline).
+However, attempts to use the
+[`kfp.Client` class](https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.client.html),
+ultimately met with SSL errors attempting to interact with the `ml-pipeline`
+service, raising errors like the following:
+
+```shell
+ssl.SSLError: [SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1131)
+```
+
+### Katib and Tensorboard
+
+The hyperparameter tuning and experiment visualization tools were out of
+scope of this exploration. Despite being visible on the Kubeflow Dashboard,
+the `kubeflow-lite` bundle does not include Katib or Tensorboard controllers.
