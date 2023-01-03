@@ -1,0 +1,11 @@
+# Ignore Raspberry Pi (arm64) nodes without GPUs
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nvdp-nvidia-device-plugin
+  namespace: nvidia-device-plugin
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
