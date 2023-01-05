@@ -1,13 +1,23 @@
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
 
-# Add cgroups memory settings and ipv4 ip_forward
+# Address sysctl settings required by kubeadm init
 - name: add cgroups memory to boot cmdline
   ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     backrefs: yes
     regexp: '(^console=serial0,.*plymouth.ignore-serial-consoles$)'
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
+- name: enable br_netfilter module
+  ansible.builtin.lineinfile:
+    path: /etc/modules
+    regexp: '(^br_netfilter$)'
+    line: 'br_netfilter'
+- name: enable net.bridge.bridge-nf-call-iptables via sysctl
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '(^net.bridge.bridge-nf-call-iptables = 1$)'
+    line: 'net.bridge.bridge-nf-call-iptables = 1'
 - name: enable net.ipv4.ip_forward via sysctl
   ansible.builtin.lineinfile:
     path: /etc/sysctl.conf
@@ -148,7 +158,7 @@
 - name: run kubeadm init
   ansible.builtin.command: >
     kubeadm init
-    --ignore-preflight-errors=Swap
+    --ignore-preflight-errors=Mem,Swap
     --control-plane-endpoint=k8s-endpoint
     --pod-network-cidr=10.39.0.0/16
 
