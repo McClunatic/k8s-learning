@@ -1,5 +1,19 @@
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
+
+# Add cgroups memory settings and ipv4 ip_forward
+- name: add cgroups memory to boot cmdline
+  ansible.builtin.lineinfile:
+    path: /boot/cmdline.txt
+    backrefs: yes
+    regexp: '(^console=serial0,.*plymouth.ignore-serial-consoles$)'
+    line: '\1 cgroup_memory=1 cgroup_enable=memory'
+- name: enable net.ipv4.ip_forward via sysctl
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    backrefs: yes
+    regexp: '^#(net.ipv4.ip_forward=1$)'
+    line: '\1'
 - name: reboot and await restart
   ansible.builtin.reboot:
 
@@ -97,7 +111,10 @@
   copy:
     content: 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
     dest: /etc/apt/sources.list.d/kubernetes.list
-- name: run apt install ethtool socat conntrack
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt install kubelet kubeadm kubectl
   ansible.builtin.apt:
     pkg:
     - kubelet
@@ -131,6 +148,7 @@
 - name: run kubeadm init
   ansible.builtin.command: >
     kubeadm init
+    --ignore-preflight-errors=Swap
     --control-plane-endpoint=k8s-endpoint
     --pod-network-cidr=10.39.0.0/16
 
