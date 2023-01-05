@@ -6,7 +6,7 @@
   ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     backrefs: yes
-    regexp: '(^console=serial0,.*plymouth.ignore-serial-consoles$)'
+    regexp: '(^console=serial0,.*rootwait$)'
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
 - name: enable br_netfilter module
   ansible.builtin.lineinfile:
@@ -154,15 +154,7 @@
     state: restarted
     daemon_reload: yes
 
-# Initialize kubeadm
-- name: run kubeadm init
-  ansible.builtin.command: >
-    kubeadm init
-    --ignore-preflight-errors=Mem,Swap
-    --control-plane-endpoint={{ control_plane_endpoint }}
-    --pod-network-cidr={{ pod_network_cidr }}
-
-# Join control plane as worker
+# Initialize kubeadm: join control plane as worker
 - name: run kubeadm join to enroll as worker
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
