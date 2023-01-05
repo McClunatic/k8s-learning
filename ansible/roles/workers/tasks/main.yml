@@ -2,16 +2,142 @@
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
 - name: reboot and await restart
   ansible.builtin.reboot:
-  become: true
-  when: wait_ready is defined
-- name: wait for microk8s to be ready
-  ansible.builtin.command: microk8s status --wait-ready
+
+# Install containerd
+- name: install containerd 1.6.14
+  ansible.builtin.unarchive:
+    src: https://github.com/containerd/containerd/releases/download/v1.6.14/containerd-1.6.14-linux-arm64.tar.gz
+    dest: /usr/local
+    remote_src: yes
+- name: create /usr/local/lib/systemd/system directory
+  ansible.builtin.file:
+    path: /usr/local/lib/systemd/system
+    state: directory
+    recurse: yes
+    mode: '0755'
+- name: install containerd.service unit file
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+    dest: /usr/local/lib/systemd/system/containerd.service
+    mode: '0644'
+- name: reload-daemon and enable containerd service
+  ansible.builtin.systemd:
+    name: containerd
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+# Install runc
+- name: install runc 1.1.4
+  ansible.builtin.get_url:
+    url: https://github.com/opencontainers/runc/releases/download/v1.1.4/runc.amd64
+    dest: /usr/local/sbin/runc
+    mode: '0755'
+
+# Install cni-plugins
+- name: create /opt/cni/bin directory
+  ansible.builtin.file:
+    path: /opt/cni/bin
+    state: directory
+    recurse: yes
+    mode: '0755'
+- name: install cni-plugins 1.1.1
+  ansible.builtin.unarchive:
+    src: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+    dest: /opt/cni/bin
+    remote_src: yes
+
+# Configure containerd for systemd cgroup
+- name: create /etc/containerd directory
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    recurse: yes
+    mode: '0755'
+- name: capture containerd default configuration
+  shell: containerd config default
+  register: config_toml
+- name: write containerd config to /etc/containerd/config.toml
+  copy:
+    content: '{{ config_toml.stdout }}'
+    dest: /etc/containerd/config.toml
+- name: configure systemd cgroup for containerd
+  ansible.builtin.lineinfile:
+    path: /etc/containerd/config.toml
+    regexp: '\.*SystemdCgroup'
+    line: '            SystemdCgroup = true'
+
+# Install kubeadm dependencies
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+- name: run apt install ethtool socat conntrack
+  ansible.builtin.apt:
+    pkg:
+    - ethtool
+    - socat
+    - conntrack
+
+# Install kubeadm kubelet kubectl
+- name: create /etc/apt/keyrings directory
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    recurse: yes
+    mode: '0755'
+- name: download google cloud public signing key
+  ansible.builtin.get_url:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    dest: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+    mode: '0644'
+- name: add kubernetes apt repository
+  copy:
+    content: 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
+    dest: /etc/apt/sources.list.d/kubernetes.list
+- name: run apt install ethtool socat conntrack
+  ansible.builtin.apt:
+    pkg:
+    - kubelet
+    - kubeadm
+    - kubectl
+- name: hold kubelet
+  ansible.builtin.dpkg_selections:
+    name: kubelet
+    selection: hold
+- name: hold kubeadm
+  ansible.builtin.dpkg_selections:
+    name: kubeadm
+    selection: hold
+- name: hold kubectl
+  ansible.builtin.dpkg_selections:
+    name: kubectl
+    selection: hold
+
+# Allow swap when starting kubeadm
+- name: create allow-swap file for k8s
+  ansible.builtin.template:
+    dest: /etc/systemd/system/kubelet.service.d/20-allow-swap.conf
+    src: 20-allow-swap.conf.j2
+- name: reload-daemon and restart kubelet service
+  ansible.builtin.systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
+
+# Initialize kubeadm
+- name: run kubeadm init
+  ansible.builtin.command: >
+    kubeadm init
+    --control-plane-endpoint=k8s-endpoint
+    --pod-network-cidr=10.39.0.0/16
+
+# Join control plane as worker
+- name: run kubeadm join to enroll as worker
   environment:
-    PATH: '{{ ansible_env.PATH }}:/snap/bin'
-  when: wait_ready is defined
-  timeout: 600
-- name: join node to microk8s cluster
-  ansible.builtin.command: microk8s join "{{ microk8s_instance }}" --worker
-  environment:
-    PATH: '{{ ansible_env.PATH }}:/snap/bin'
-  timeout: 600
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  ansible.builtin.command: >
+    kubeadm join k8s-endpoint:6443 --token '{{ join_token }}'
+    --discovery-token-ca-cert-hash '{{ join_hash }}'
