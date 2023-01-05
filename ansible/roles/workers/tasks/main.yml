@@ -159,13 +159,11 @@
   ansible.builtin.command: >
     kubeadm init
     --ignore-preflight-errors=Mem,Swap
-    --control-plane-endpoint=k8s-endpoint
-    --pod-network-cidr=10.39.0.0/16
+    --control-plane-endpoint={{ control_plane_endpoint }}
+    --pod-network-cidr={{ pod_network_cidr }}
 
 # Join control plane as worker
 - name: run kubeadm join to enroll as worker
   environment:
     KUBECONFIG: /etc/kubernetes/admin.conf
-  ansible.builtin.command: >
-    kubeadm join k8s-endpoint:6443 --token '{{ join_token }}'
-    --discovery-token-ca-cert-hash '{{ join_hash }}'
+  ansible.builtin.command: '{{ kubeadm_join_command }}'
