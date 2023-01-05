@@ -9,6 +9,7 @@
   tasks:
     - name: update /etc/resolv.conf
       ansible.builtin.lineinfile:
-        path: /etc/resolv.conf
+        path: /etc/resolv.conf.head
+        create: yes
         regexp: 'nameserver.*'
         line: 'nameserver 192.168.1.100'
