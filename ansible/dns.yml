@@ -13,3 +13,14 @@
         create: yes
         regexp: 'nameserver.*'
         line: 'nameserver 192.168.1.100'
+    - name: create /run/systemd/resolve directory
+      ansible.builtin.file:
+        path: /run/systemd/resolve
+        state: directory
+        recurse: true
+        mode: '0755'
+    - name: create symbolic link to /etc/resolv.conf
+      ansible.builtin.file:
+        src: /etc/resolv.conf
+        dest: /run/systemd/resolve/resolv.conf
+        state: link
