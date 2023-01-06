@@ -16,3 +16,8 @@ Things to be captured here:
 3. Calico needs to be created `kubectl -f create` not `apply`, because the
    annotations for one of its CRDs exceeeds the allowed bytes length. So
    unfortunately Kustomize can't be used.
+4. If running with swap disabled on WSL 2, beware the `swapoff -a` is a
+   session-only change, not a permanent one, and that there is no
+   `/etc/fstab` to modify. Instead, use the
+   [`.wslconfig` swap setting](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#configuration-setting-for-wslconfig)
+   to disable swap for WSL 2 VMs.
