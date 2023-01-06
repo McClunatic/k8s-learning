@@ -1,7 +1,0 @@
-# https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#kustomize
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-- https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/tigera-operator.yaml
-- https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/custom-resources.yaml
