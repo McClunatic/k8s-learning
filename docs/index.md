@@ -21,3 +21,6 @@ platform for experimentation and learning.
   creating and modifying our first Kubernetes resources.
 * [Kubeflow](kubeflow.md): Introduces Kubeflow and provides guidance
   for deployment.
+* [Vanilla Kubernetes](vanilla.md): Discusses the work involved to
+  start up a Kubernetes cluster using `kubeadm` rather than
+  Microk8s.

@@ -24,6 +24,7 @@ nav:
   - k8s_management.md
   - first_deployments.md
   - kubeflow.md
+  - vanilla.md
 markdown_extensions:
 - pymdownx.snippets
 - pymdownx.superfences
