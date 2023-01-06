@@ -1,2 +1,2 @@
-control_plane_endpoint: k8s-endpoint
+control_plane_endpoint: zephyrus-k8s
 pod_network_cidr: 10.39.0.0/16
