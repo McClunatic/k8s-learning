@@ -6,42 +6,47 @@
 
 set -x
 
-systcl() {
+sysctl_ip_forward() {
     sudo sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/" /etc/sysctl.conf
     sudo sysctl -p
 }
 
-miniconda() {
-    curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh | bash -s -- -b
+install_miniconda() {
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b
+    rm Miniconda3-latest-Linux-x86_64.sh
 }
 
-containerd() {
+install_containerd() {
     wget https://github.com/containerd/containerd/releases/download/v1.6.14/containerd-1.6.14-linux-amd64.tar.gz
     sudo tar Cxzvf /usr/local containerd-1.6.14-linux-amd64.tar.gz 
+    rm containerd-1.6.14-linux-amd64.tar.gz 
     sudo mkdir -p /usr/local/lib/systemd/system
     sudo wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service -P /usr/local/lib/systemd/system
     sudo systemctl daemon-reload
     sudo systemctl enable --now containerd
 }
 
-runc() {
+install_runc() {
     wget https://github.com/opencontainers/runc/releases/download/v1.1.4/runc.amd64
     sudo install -m 755 runc.amd64 /usr/local/sbin/runc
+    rm runc.amd64
 }
 
-cni_plugins() {
+install_cni_plugins() {
     wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
     sudo mkdir -p /opt/cni/bin
     sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
+    rm cni-plugins-linux-amd64-v1.1.1.tgz
     containerd config default > config.toml
     patch < $(dirname -- "$0")/patches/config.toml.$1.patch
-    sudo mkdir /etc/containerd
+    sudo mkdir -p /etc/containerd
     sudo cp config.toml /etc/containerd
     rm config.toml
     sudo systemctl restart containerd
 }
 
-cuda() {
+install_cuda() {
     sudo apt update
     sudo apt upgrade -y
 
@@ -54,7 +59,7 @@ cuda() {
     sudo apt-get -y install cuda
 }
 
-nvidia_container_toolkit() {
+install_nvidia_container_toolkit() {
     distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
     curl -s -L https://nvidia.github.io/libnvidia-container/gpgkey | sudo apt-key add -
     curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
@@ -63,7 +68,7 @@ nvidia_container_toolkit() {
     sudo apt-get install -y nvidia-container-toolkit
 }
 
-kube_binaries() {
+install_kube_binaries() {
     sudo apt update
     sudo apt install -y ethtool socat conntrack
     sudo apt install -y apt-transport-https ca-certificates curl
@@ -93,15 +98,15 @@ else
     exit 1
 fi
 
-sysctl
-miniconda
-containerd $mode
-runc
-cni_plugins
+sysctl_ip_forward
+install_miniconda
+install_containerd
+install_runc
+install_cni_plugins $mode
 if [[ "$mode" == "cuda" ]]
 then
-    cuda
-    nvidia_container_toolkit
+    install_cuda
+    install_nvidia_container_toolkit
 fi
-kube_binaries
+install_kube_binaries
 [[ "$1" == "control-plane" ]] && kubeadm_init $(hostname) $2
