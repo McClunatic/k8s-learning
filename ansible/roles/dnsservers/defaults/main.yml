@@ -4,8 +4,8 @@ dnsmasq_expand_hosts: true
 dnsmasq_domain: local
 dnsmasq_addn_hosts: /etc/additional_hosts
 dnsmasq_addn_hosts_list:
-  - 192.168.1.38    zephyrus-wsl
-  - 192.168.1.39    zephyrus-k8s k8s-endpoint
+  - 192.168.1.90    zeph-control
+  - 192.168.1.91    zeph-worker
   - 192.168.1.9     zephyrus
   - 192.168.1.100   raspberrypi-0
   - 192.168.1.101   raspberrypi-1
