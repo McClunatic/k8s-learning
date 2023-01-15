@@ -1,0 +1,17 @@
+[Match]
+Name=eth0
+
+[Network]
+Description=WSL-E
+DHCP=true
+IPv6AcceptRA=true
+MulticastDNS=true
+LLDP=true
+EmitLLDP=true
+Address=IP_ADDRESS/24
+Gateway=192.168.1.1
+
+[DHCP]
+CriticalConnection=true
+RouteMetric=10
+UseDomains=true

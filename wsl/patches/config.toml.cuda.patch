@@ -1,0 +1,45 @@
+--- config.toml	2023-01-05 11:20:56.267285619 -0500
++++ config.toml	2023-01-05 11:22:26.737268417 -0500
+@@ -76,7 +76,7 @@
+       max_conf_num = 1
+ 
+     [plugins."io.containerd.grpc.v1.cri".containerd]
+-      default_runtime_name = "runc"
++      default_runtime_name = "nvidia"
+       disable_snapshot_annotations = true
+       discard_unpacked_layers = false
+       ignore_rdt_not_enabled_errors = false
+@@ -122,7 +122,32 @@
+             NoPivotRoot = false
+             Root = ""
+             ShimCgroup = ""
+-            SystemdCgroup = false
++            SystemdCgroup = true
++
++        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia]
++          base_runtime_spec = ""
++          cni_conf_dir = ""
++          cni_max_conf_num = 0
++          container_annotations = []
++          pod_annotations = []
++          privileged_without_host_devices = false
++          runtime_engine = ""
++          runtime_path = ""
++          runtime_root = ""
++          runtime_type = "io.containerd.runc.v2"
++
++          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.nvidia.options]
++            BinaryName = "/usr/bin/nvidia-container-runtime"
++            CriuImagePath = ""
++            CriuPath = ""
++            CriuWorkPath = ""
++            IoGid = 0
++            IoUid = 0
++            NoNewKeyring = false
++            NoPivotRoot = false
++            Root = ""
++            ShimCgroup = ""
++            SystemdCgroup = true
+ 
+       [plugins."io.containerd.grpc.v1.cri".containerd.untrusted_workload_runtime]
+         base_runtime_spec = ""
