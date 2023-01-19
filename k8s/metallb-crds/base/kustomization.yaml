@@ -2,5 +2,4 @@
 namespace: metallb-system
 
 resources:
-  - ipaddresspool.yaml
-  - l2advertisement.yaml
+  - github.com/metallb/metallb/config/native?ref=v0.13.7
