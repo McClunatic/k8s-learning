@@ -1,0 +1,24 @@
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#kustomize
+# https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ingress
+resources:
+# Configure RBAC
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/ns-and-sa.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/rbac/rbac.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/rbac/ap-rbac.yaml
+# Create common resources
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/default-server-secret.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/nginx-config.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/ingress-class.yaml
+# Create custom resources
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/k8s.nginx.org_virtualservers.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/k8s.nginx.org_virtualserverroutes.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/k8s.nginx.org_transportservers.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/k8s.nginx.org_policies.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/k8s.nginx.org_globalconfigurations.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/appprotect.f5.com_aplogconfs.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/appprotect.f5.com_appolicies.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/common/crds/appprotect.f5.com_apusersigs.yaml
