@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - admin-user.yaml
   - admin-clusterrolebinding.yaml
-  - ingress.yaml
+  - transportserver.yaml
