@@ -6,6 +6,7 @@ kind: Kustomization
 namespace: ingress
 resources:
 # Deploy the ingress controller
-  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/daemon-set/nginx-ingress.yaml
+# https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/daemon-set/nginx-ingress.yaml
+  - nginx-ingress.yaml
 # Get access to the ingress controller
   - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/service/loadbalancer.yaml
