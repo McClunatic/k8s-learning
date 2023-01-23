@@ -11,3 +11,5 @@ helmCharts:
   releaseName: nvdp
   repo: https://nvidia.github.io/k8s-device-plugin
   version: 0.13.0
+  valuesInline:
+    gfd.enabled: "true"
