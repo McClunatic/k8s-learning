@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxy-ingress
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - jupyterhub.k8s.local
+    secretName: jupyterhub-secret
+  rules:
+  - host: jupyterhub.k8s.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: proxy-public
+            port:
+              number: 80

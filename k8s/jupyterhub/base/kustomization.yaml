@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: jupyterhub
 resources:
 - namespace.yaml
+- ingress.yaml
 helmCharts:
 - name: jupyterhub
   includeCRDs: false
@@ -11,3 +12,10 @@ helmCharts:
   releaseName: jupyterhub
   repo: https://jupyterhub.github.io/helm-chart
   version: 2.0.0
+  valuesInline:
+    proxy:
+      https:
+        enabled: true
+        type: offload
+      service:
+        type: ClusterIP
