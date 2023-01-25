@@ -13,4 +13,4 @@ helmCharts:
   version: 0.13.0
   valuesInline:
     gfd:
-      enabled: false
+      enabled: true
