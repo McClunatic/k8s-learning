@@ -11,7 +11,7 @@ helmCharts:
   namespace: jupyterhub
   releaseName: jupyterhub
   repo: https://jupyterhub.github.io/helm-chart
-  version: 2.0.0
+  version: 2.0.1-0.dev.git.5980.h257b05ef
   valuesInline:
     proxy:
       https:
@@ -19,3 +19,24 @@ helmCharts:
         type: offload
       service:
         type: ClusterIP
+    singleuser:
+      # Defines the default image
+      image:
+        name: jupyter/minimal-notebook
+        tag: python-3.10.8
+      profileList:
+        - display_name: "Minimal environment"
+          description: "To avoid too much bells and whistles: Python."
+          default: true
+        - display_name: "Data Science environment"
+          description: "If you want the additional bells and whistles: Python, R, and Julia."
+          kubespawner_override:
+            image: jupyter/datascience-notebook:python-3.10.8
+        - display_name: "Spark environment"
+          description: "The Jupyter Stacks spark image!"
+          kubespawner_override:
+            image: jupyter/pyspark-notebook:python-3.10.8
+        - display_name: "TensorFlow environment"
+          description: "The official TensorFlow 2.11.0 GPU Jupyter image."
+          kubespawner_override:
+            image: tensorflow/tensorflow:2.11.0-gpu-jupyter
