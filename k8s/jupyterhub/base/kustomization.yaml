@@ -36,7 +36,3 @@ helmCharts:
           description: "The Jupyter Stacks spark image!"
           kubespawner_override:
             image: jupyter/pyspark-notebook:python-3.10.8
-        - display_name: "TensorFlow environment"
-          description: "The official TensorFlow 2.11.0 GPU Jupyter image."
-          kubespawner_override:
-            image: tensorflow/tensorflow:2.11.0-gpu-jupyter
