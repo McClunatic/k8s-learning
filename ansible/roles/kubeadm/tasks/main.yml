@@ -137,3 +137,14 @@
   ansible.builtin.dpkg_selections:
     name: kubectl
     selection: hold
+
+# Allow swap when starting kubeadm
+- name: create allow-swap file for kubelet
+  ansible.builtin.template:
+    dest: /etc/systemd/system/kubelet.service.d/20-allow-swap.conf
+    src: 20-allow-swap.conf.j2
+- name: reload daemon and restart kubelet service
+  ansible.builtin.systemd:
+    name: kubelet
+    state: restarted
+    daemon_reload: yes
