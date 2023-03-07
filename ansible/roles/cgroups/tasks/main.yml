@@ -1,11 +1,10 @@
 - name: check boot cmdline for cgroups settings
-  shell: grep -c 'cgroups' /boot/cmdline.txt
+  shell: grep -c 'cgroups' /boot/cmdline.txt || true
   register: cmdline_cgroups
-  ignore_errors: true
 - name: add cgroups memory to boot cmdline
   ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     backrefs: yes
-    regexp: '^.*$'
+    regexp: '^(.*)$'
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
   when: cmdline_cgroups.stdout == '0'
