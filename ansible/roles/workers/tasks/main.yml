@@ -1,36 +1,44 @@
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
 
-# Address sysctl settings required by kubeadm init
+# Configure boot cmdline options for kubeadm
+- name: check boot cmdline for cgroups settings
+  shell: grep -c 'cgroups' /etc/default/grub
+  register: cmdline_cgroups
+  ignore_errors: true
 - name: add cgroups memory to boot cmdline
   ansible.builtin.lineinfile:
     path: /boot/cmdline.txt
     backrefs: yes
-    regexp: '(^console=serial0,.*rootwait$)'
+    regexp: '^.*$'
     line: '\1 cgroup_memory=1 cgroup_enable=memory'
+  when: cmdline_cgroups.stdout == '0'
+
+# Load modules required by kubeadm
 - name: enable br_netfilter module
   ansible.builtin.lineinfile:
     path: /etc/modules
     regexp: '(^br_netfilter$)'
     line: 'br_netfilter'
-- name: enable net.bridge.bridge-nf-call-iptables via sysctl
-  ansible.builtin.lineinfile:
-    path: /etc/sysctl.conf
-    regexp: '(^net.bridge.bridge-nf-call-iptables = 1$)'
-    line: 'net.bridge.bridge-nf-call-iptables = 1'
-- name: enable net.ipv4.ip_forward via sysctl
-  ansible.builtin.lineinfile:
-    path: /etc/sysctl.conf
-    backrefs: yes
-    regexp: '^#(net.ipv4.ip_forward=1$)'
-    line: '\1'
 - name: reboot and await restart
   ansible.builtin.reboot:
 
+# Address sysctl settings required by kubeadm init
+- name: enable net.bridge.bridge-nf-call-iptables via sysctl
+  ansible.posix.sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    sysctl_set: true
+- name: enable net.ipv4.ip_forward via sysctl
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+
 # Install containerd
-- name: install containerd 1.6.14
+- name: install containerd 1.6.19
   ansible.builtin.unarchive:
-    src: https://github.com/containerd/containerd/releases/download/v1.6.14/containerd-1.6.14-linux-arm64.tar.gz
+    src: https://github.com/containerd/containerd/releases/download/v1.6.19/containerd-1.6.19-linux-arm64.tar.gz
     dest: /usr/local
     remote_src: yes
 - name: create /usr/local/lib/systemd/system directory
@@ -65,9 +73,9 @@
     state: directory
     recurse: yes
     mode: '0755'
-- name: install cni-plugins 1.1.1
+- name: install cni-plugins 1.2.0
   ansible.builtin.unarchive:
-    src: https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-arm64-v1.1.1.tgz
+    src: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm64-v1.2.0.tgz
     dest: /opt/cni/bin
     remote_src: yes
 
@@ -142,20 +150,3 @@
   ansible.builtin.dpkg_selections:
     name: kubectl
     selection: hold
-
-# Allow swap when starting kubeadm
-- name: create allow-swap file for k8s
-  ansible.builtin.template:
-    dest: /etc/systemd/system/kubelet.service.d/20-allow-swap.conf
-    src: 20-allow-swap.conf.j2
-- name: reload-daemon and restart kubelet service
-  ansible.builtin.systemd:
-    name: kubelet
-    state: restarted
-    daemon_reload: yes
-
-# Initialize kubeadm: join control plane as worker
-- name: run kubeadm join to enroll as worker
-  environment:
-    KUBECONFIG: /etc/kubernetes/admin.conf
-  ansible.builtin.command: '{{ kubeadm_join_command }}'
