@@ -2,25 +2,11 @@
   hosts: canary
   become: true
   roles:
-    - dnsservers
-- name: configure DNS server
-  hosts: k8s
+  - dnsservers
+- name: upgrade OS and configure resolvconf
+  hosts:
+  - raspi3s
+  - k8sworkers
   become: true
-  tasks:
-    - name: update /etc/resolv.conf
-      ansible.builtin.lineinfile:
-        path: /etc/resolv.conf.head
-        create: yes
-        regexp: 'nameserver.*'
-        line: 'nameserver 192.168.1.100'
-    - name: create /run/systemd/resolve directory
-      ansible.builtin.file:
-        path: /run/systemd/resolve
-        state: directory
-        recurse: true
-        mode: '0755'
-    - name: create symbolic link to /etc/resolv.conf
-      ansible.builtin.file:
-        src: /etc/resolv.conf
-        dest: /run/systemd/resolve/resolv.conf
-        state: link
+  roles:
+  - dnsclients
