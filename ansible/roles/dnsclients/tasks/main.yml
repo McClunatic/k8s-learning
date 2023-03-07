@@ -1,0 +1,13 @@
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+- name: update /etc/resolvconf.conf
+  ansible.builtin.lineinfile:
+    path: /etc/resolvconf.conf
+    regexp: '\.*name_servers.*'
+    line: 'name_servers=192.168.1.100'
+- name: apply resolvconf configuration
+  ansible.builtin.command: resolvconf -u
