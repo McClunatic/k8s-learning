@@ -1,5 +1,0 @@
-- name: join k8s cluster as worker
-  hosts: "{{ variable_host | default('k8s') }}"
-  become: true
-  roles:
-    - workers

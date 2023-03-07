@@ -1,19 +1,6 @@
 # https://microk8s.io/#install-microk8s
 # https://stackoverflow.com/questions/33222641/override-hosts-variable-of-ansible-playbook-from-the-command-line
 
-# Configure boot cmdline options for kubeadm
-- name: check boot cmdline for cgroups settings
-  shell: grep -c 'cgroups' /etc/default/grub
-  register: cmdline_cgroups
-  ignore_errors: true
-- name: add cgroups memory to boot cmdline
-  ansible.builtin.lineinfile:
-    path: /boot/cmdline.txt
-    backrefs: yes
-    regexp: '^.*$'
-    line: '\1 cgroup_memory=1 cgroup_enable=memory'
-  when: cmdline_cgroups.stdout == '0'
-
 # Load modules required by kubeadm
 - name: enable br_netfilter module
   ansible.builtin.lineinfile:
