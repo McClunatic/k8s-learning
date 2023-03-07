@@ -11,7 +11,7 @@ dnsmasq_addn_hosts_list:
 - 192.168.1.101   raspberrypi-1
 - 192.168.1.102   raspberrypi-2
 - 192.168.1.103   raspberrypi-3
-- 192.168.1.110   vatomouro-ctrl
+- 192.168.1.110   vatomouro-0
 - 192.168.1.111   vatomouro-1
 - 192.168.1.112   vatomouro-2
 - 192.168.1.113   vatomouro-3
