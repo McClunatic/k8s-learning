@@ -6,7 +6,7 @@
 - name: upgrade OS and configure resolvconf
   hosts:
   - raspi3s
-  - k8sworkers
+  - k8s
   become: true
   roles:
   - dnsclients
