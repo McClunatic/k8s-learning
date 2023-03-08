@@ -23,8 +23,11 @@
   - k8sworkers
   become: true
   tasks:
+  - name: run kubeadm reset
+    ansible.builtin.command:
+      cmd: kubeadm reset --force
   - name: run kubeadm join
     ansible.builtin.command:
       cmd: >-
-        {{ hostvars["vatomouro-1"].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
-        {{ hostvars["vatomouro-1"].kubeadm_init.stdout_lines[-1] | trim }}
+        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
+        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-1] | trim }}
