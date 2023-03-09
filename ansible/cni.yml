@@ -1,0 +1,56 @@
+
+- name: install calico container network interface
+  hosts:
+  # TODO: consider host to use if load balanced
+  - k8scontrol
+  tasks:
+  - name: install python3-kubernetes client library
+    ansible.builtin.apt:
+      name: python3-kubernetes
+    become: true
+  - name: create ~/.kube directory
+    ansible.builtin.file:
+      path: ~/.kube
+      state: directory
+  - name: copy kubernetes config to ~/.kube
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/kubernetes/admin.conf
+      dest: '/home/{{ ansible_user }}/.kube/config'
+      owner: '{{ ansible_user }}'
+      group: '{{ ansible_user }}'
+    become: true
+  - name: create temporary k8s manifests directory
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: k8s
+    register: k8s_manifests
+  - name: download calico operator manifest
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+      dest: '{{ k8s_manifests.path }}/tigera-operator.yaml'
+  - name: apply calico operator manifest
+    kubernetes.core.k8s:
+      state: present
+      src: '{{ k8s_manifests.path }}/tigera-operator.yaml'
+  - name: download calico custom resources manifest
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
+      dest: '{{ k8s_manifests.path }}/custom-resources.yaml'
+  - name: patch cidr in custom resources manifest
+    ansible.builtin.lineinfile:
+      path: '{{ k8s_manifests.path }}/custom-resources.yaml'
+      regexp: '^(.*cidr: ).*$'
+      line: '\g<1>{{ pod_network_cidr }}'
+      backrefs: yes
+  - name: pause for 5 seconds for crds to establish
+    ansible.builtin.pause:
+      seconds: 5
+  - name: apply calico custom resources manifest
+    kubernetes.core.k8s:
+      state: present
+      src: '{{ k8s_manifests.path }}/custom-resources.yaml'
+  - name: delete temporary k8s manifests directory
+    ansible.builtin.file:
+      state: absent
+      path: '{{ k8s_manifests.path }}'
