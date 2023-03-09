@@ -3,9 +3,17 @@
   - k8scontrol
   become: true
   tasks:
+  - name: update self entry in /etc/hosts
+    ansible.builtin.lineinfile:
+      path: /etc/hosts
+      regexp: '.*{{ inventory_hostname }}'
+      line: '{{ ansible_default_ipv4.address }} {{ inventory_hostname }}'
   - name: run kubeadm reset
     ansible.builtin.command:
       cmd: kubeadm reset --force
+  - name: reboot and await restart
+    ansible.builtin.reboot:
+
   - name: run kubeadm init
     ansible.builtin.command:
       argv:
@@ -26,6 +34,9 @@
   - name: run kubeadm reset
     ansible.builtin.command:
       cmd: kubeadm reset --force
+  - name: reboot and await restart
+    ansible.builtin.reboot:
+
   - name: run kubeadm join
     ansible.builtin.command:
       cmd: >-
