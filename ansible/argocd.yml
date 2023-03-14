@@ -1,0 +1,72 @@
+
+- name: install calico container network interface
+  hosts:
+  # TODO: consider host to use if load balanced
+  - k8scontrol
+  tasks:
+  - name: install python3-kubernetes client library
+    ansible.builtin.apt:
+      name: python3-kubernetes
+    become: true
+  - name: create ~/.kube directory
+    ansible.builtin.file:
+      path: ~/.kube
+      state: directory
+  - name: copy kubernetes config to ~/.kube
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/kubernetes/admin.conf
+      dest: '/home/{{ ansible_user }}/.kube/config'
+      owner: '{{ ansible_user }}'
+      group: '{{ ansible_user }}'
+    become: true
+  - name: create temporary k8s manifests directory
+    ansible.builtin.tempfile:
+      state: directory
+      suffix: k8s
+    register: k8s_manifests
+  - name: apply argocd namespace
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: argocd
+  - name: download argocd manifest
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/argoproj/argo-cd/v2.6.5/manifests/install.yaml
+      dest: '{{ k8s_manifests.path }}/install.yaml'
+  - name: apply argocd manifest
+    kubernetes.core.k8s:
+      state: present
+      src: '{{ k8s_manifests.path }}/install.yaml'
+      namespace: argocd
+  - name: delete temporary k8s manifests directory
+    ansible.builtin.file:
+      state: absent
+      path: '{{ k8s_manifests.path }}'
+  - name: wait for application crd to be established
+    ansible.builtin.shell: >-
+      kubectl wait -n argocd
+      --for condition=Established crd/applications.argoproj.io
+  - name: apply argocd application to manage itself
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          name: argocd
+          namespace: argocd
+        spec:
+          project: default
+          source:
+            repoURL: https://github.com/McClunatic/k8s-learning.git
+            targetRevision: HEAD
+            path: gitops/argocd/overlays/prod
+          destination:
+            name: in-cluster
+            namespace: argocd
+          syncPolicy:
+            automated: {}
