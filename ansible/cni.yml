@@ -43,9 +43,10 @@
       regexp: '^(.*cidr: ).*$'
       line: '\g<1>{{ pod_network_cidr }}'
       backrefs: yes
-  - name: pause for 5 seconds for crds to establish
-    ansible.builtin.pause:
-      seconds: 5
+  - name: wait for installation crd to be established
+    ansible.builtin.shell: >-
+      kubectl wait -n argocd
+      --for condition=Established crd/installations.operator.tigera.io
   - name: apply calico custom resources manifest
     kubernetes.core.k8s:
       state: present
