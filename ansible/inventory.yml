@@ -55,3 +55,4 @@ pis:
     # TODO: consider using load balancer for HA
     control_plane_endpoint: vatomouro-0
     pod_network_cidr: 10.90.0.0/16
+    ip_address_pool_addresses: 192.168.1.192/27
