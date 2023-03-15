@@ -4,22 +4,6 @@
   # TODO: consider host to use if load balanced
   - k8scontrol
   tasks:
-  - name: install python3-kubernetes client library
-    ansible.builtin.apt:
-      name: python3-kubernetes
-    become: true
-  - name: create ~/.kube directory
-    ansible.builtin.file:
-      path: ~/.kube
-      state: directory
-  - name: copy kubernetes config to ~/.kube
-    ansible.builtin.copy:
-      remote_src: true
-      src: /etc/kubernetes/admin.conf
-      dest: '/home/{{ ansible_user }}/.kube/config'
-      owner: '{{ ansible_user }}'
-      group: '{{ ansible_user }}'
-    become: true
   - name: create temporary k8s manifests directory
     ansible.builtin.tempfile:
       state: directory
