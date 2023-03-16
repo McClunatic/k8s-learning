@@ -9,5 +9,19 @@
     path: /etc/resolvconf.conf
     regexp: '\.*name_servers.*'
     line: 'name_servers=192.168.1.100'
+  when: inventory_hostname in groups['raspis']
 - name: apply resolvconf configuration
   ansible.builtin.command: resolvconf -u
+  when: inventory_hostname in groups['raspis']
+- name: write networkmanager dns servers conf
+  ansible.builtin.template:
+    dest: /etc/NetworkManager/conf.d/30-dns-servers.conf
+    src: 30-dns-servers.conf.j2
+    mode: '0644'
+  when: inventory_hostname in groups['rockpis']
+- name: reload daemon and restart networkmanager service
+  ansible.builtin.systemd:
+    name: NetworkManager
+    state: restarted
+    daemon_reload: yes
+  when: inventory_hostname in groups['rockpis']

@@ -24,6 +24,10 @@ pis:
           ansible_host: 192.168.1.112
         vatomouro-3:
           ansible_host: 192.168.1.113
+    raspis:
+      children:
+        raspi3s:
+        raspi4s:
     rockpis:
       hosts:
         vrachos-0:
@@ -38,14 +42,18 @@ pis:
       hosts:
         vatomouro-0:
           ansible_host: 192.168.1.110
-    k8sworkers:
-      hosts:
         vatomouro-1:
           ansible_host: 192.168.1.111
         vatomouro-2:
           ansible_host: 192.168.1.112
+    k8sworkers:
+      hosts:
         vatomouro-3:
           ansible_host: 192.168.1.113
+        vrachos-0:
+          ansible_host: 192.168.1.120
+        vrachos-1:
+          ansible_host: 192.168.1.121
     k8s:
       children:
         k8scontrol:
@@ -53,6 +61,7 @@ pis:
   vars:
     ansible_user: pi
     # TODO: consider using load balancer for HA
-    control_plane_endpoint: vatomouro-0
+    control_plane_endpoint: vatomouro
+    apiserver_vip: 192.168.1.150
     pod_network_cidr: 10.90.0.0/16
     ip_address_pool_addresses: 192.168.1.192/27

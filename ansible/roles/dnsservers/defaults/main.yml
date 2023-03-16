@@ -19,6 +19,7 @@ dnsmasq_addn_hosts_list:
 - 192.168.1.121   vrachos-1
 - 192.168.1.122   vrachos-2
 - 192.168.1.123   vrachos-3
+- 192.168.1.150   vatomouro
 # NOTE: IPs assigned depend on order of deployment
 - >
     192.168.1.192   argocd-server.k8s.local
