@@ -1,0 +1,5 @@
+- name: install static manifests for high availability k8s cluster
+  hosts: k8scontrol
+  become: true
+  roles:
+    - ha

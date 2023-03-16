@@ -1,0 +1,5 @@
+apiserver_src_port: 6443
+apiserver_dest_port: 6443
+auth_pass: 3446
+interface: wlan0
+router_id: 43

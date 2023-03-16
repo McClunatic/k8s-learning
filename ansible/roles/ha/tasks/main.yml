@@ -1,0 +1,31 @@
+- name: create /etc/kubernetes/ha directory
+  ansible.builtin.file:
+    path: /etc/kubernetes/ha
+    state: directory
+    mode: '0775'
+    recurse: true
+- name: write keepalived apiserver check script
+  ansible.builtin.template:
+    dest: /etc/kubernetes/ha/check_apiserver.sh
+    src: check_apiserver.sh.j2
+    mode: '0755'
+- name: write keepalived configuration
+  ansible.builtin.template:
+    dest: /etc/kubernetes/ha/keepalived.conf
+    src: keepalived.conf.j2
+    mode: '0644'
+- name: write haproxy configuration
+  ansible.builtin.template:
+    dest: /etc/kubernetes/ha/haproxy.cfg
+    src: haproxy.cfg.j2
+    mode: '0644'
+- name: write keepalived manifest for static pod
+  ansible.builtin.template:
+    dest: /etc/kubernetes/manifests/keepalived.yaml
+    src: keepalived.yaml.j2
+    mode: '0644'
+- name: write haproxy manifest for static pod
+  ansible.builtin.template:
+    dest: /etc/kubernetes/manifests/haproxy.yaml
+    src: haproxy.yaml.j2
+    mode: '0644'
