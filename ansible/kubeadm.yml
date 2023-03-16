@@ -1,12 +1,11 @@
 - name: enable cgroups_memory on raspberry pis
   hosts:
-  - k8s
+  - raspis
   become: true
   roles:
     - cgroups
 - name: install kubeadm, kubelet and kubectl
   hosts:
-  # TODO: add rock pis
   - k8s
   become: true
   roles:
