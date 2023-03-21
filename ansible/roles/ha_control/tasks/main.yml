@@ -1,0 +1,12 @@
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+- name: install python3-kubernetes client library
+  ansible.builtin.apt:
+    name: python3-kubernetes
+  become: true
+- name: run kubeadm join
+  debug: hostvars["vatomouro-0"].kubeadm_init

@@ -1,0 +1,19 @@
+- name: initialize first control plane node
+  hosts: vatomouro-0
+  become: true
+  roles:
+  - kubeadm_reset
+  - first_control
+  - cni
+- name: synchronize certificates
+  hosts: k8scontrol:!vatomouro-0
+  become: true
+  delegate_to: vatomouro-0
+  roles:
+  - sync_certs
+- name: join remaining control plane nodes
+  hosts: k8scontrol:!vatomouro-0
+  become: true
+  roles:
+  - kubeadm_reset
+  - ha_control

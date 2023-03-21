@@ -1,0 +1,31 @@
+- name: run apt update
+  ansible.builtin.apt:
+    update_cache: true
+- name: run apt upgrade
+  ansible.builtin.apt:
+    upgrade: true
+- name: install python3-kubernetes client library
+  ansible.builtin.apt:
+    name: python3-kubernetes
+  become: true
+- name: run kubeadm init
+  ansible.builtin.command:
+    argv:
+    - kubeadm
+    - init
+    - --control-plane-endpoint
+    - '{{ control_plane_endpoint }}'
+    - --pod-network-cidr
+    - '{{ pod_network_cidr }}'
+  register: kubeadm_init
+- name: create ~/.kube directory
+  ansible.builtin.file:
+    path: ~/.kube
+    state: directory
+- name: copy kubernetes config to ~/.kube
+  ansible.builtin.copy:
+    remote_src: true
+    src: /etc/kubernetes/admin.conf
+    dest: '/home/{{ ansible_user }}/.kube/config'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'

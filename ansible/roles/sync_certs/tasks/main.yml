@@ -1,0 +1,18 @@
+- name: create /etc/kubernetes/pki and etcd
+  ansible.builtin.file:
+    path: /etc/kubernetes/pki/etcd
+    state: directory
+    recurse: true
+- name: synchronize kubernetes certs
+  ansible.builtin.synchronize:
+    src: '{{ item }}'
+    dest: '{{ item }}'
+  loop:
+  - /etc/kubernetes/pki/ca.crt
+  - /etc/kubernetes/pki/ca.key
+  - /etc/kubernetes/pki/sa.key
+  - /etc/kubernetes/pki/sa.pub
+  - /etc/kubernetes/pki/front-proxy-ca.crt
+  - /etc/kubernetes/pki/front-proxy-ca.key
+  - /etc/kubernetes/pki/etcd/ca.crt
+  - /etc/kubernetes/pki/etcd/ca.key

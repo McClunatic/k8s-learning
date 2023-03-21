@@ -1,11 +1,17 @@
 # Set up DNS server to include k8s hosts
 - import_playbook: dns.yml
+  vars:
+    dnsmasq_addn_hosts_template: additional_hosts.single.j2
 # Install kubeadm, kubelet and kubectl
 - import_playbook: kubeadm.yml
-# Initialize control plane and add workers
-- import_playbook: k8s.yml
-# Install k8s container network interface
-- import_playbook: cni.yml
+# Install high availability resources on control plane hosts
+- import_playbook: ha.yml
+# Initialize control plane
+- import_playbook: control_plane.yml
+# Update DNS server to use virtual control plane endpoint
+- import_playbook: dns.yml
+# Join workers
+- import_playbook: workers.yml
 # Install k8s bare metal load balancer
 - import_playbook: metallb.yml
 # Install argocd and set up argocd self-management

@@ -1,0 +1,35 @@
+- name: create temporary k8s manifests directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: k8s
+  register: k8s_manifests
+- name: download calico operator manifest
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/tigera-operator.yaml
+    dest: '{{ k8s_manifests.path }}/tigera-operator.yaml'
+- name: apply calico operator manifest
+  kubernetes.core.k8s:
+    state: present
+    src: '{{ k8s_manifests.path }}/tigera-operator.yaml'
+- name: download calico custom resources manifest
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/custom-resources.yaml
+    dest: '{{ k8s_manifests.path }}/custom-resources.yaml'
+- name: patch cidr in custom resources manifest
+  ansible.builtin.lineinfile:
+    path: '{{ k8s_manifests.path }}/custom-resources.yaml'
+    regexp: '^(.*cidr: ).*$'
+    line: '\g<1>{{ pod_network_cidr }}'
+    backrefs: yes
+- name: wait for installation crd to be established
+  ansible.builtin.shell: >-
+    kubectl wait -n argocd
+    --for condition=Established crd/installations.operator.tigera.io
+- name: apply calico custom resources manifest
+  kubernetes.core.k8s:
+    state: present
+    src: '{{ k8s_manifests.path }}/custom-resources.yaml'
+- name: delete temporary k8s manifests directory
+  ansible.builtin.file:
+    state: absent
+    path: '{{ k8s_manifests.path }}'

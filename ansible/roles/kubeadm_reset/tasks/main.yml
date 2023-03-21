@@ -1,0 +1,9 @@
+- name: run kubeadm reset
+  ansible.builtin.command:
+    cmd: kubeadm reset --force
+- name: remove /etc/cni/net.d
+  file:
+    state: absent
+    path: /etc/cni/net.d
+- name: reboot and await restart
+  ansible.builtin.reboot:

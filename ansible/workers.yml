@@ -1,0 +1,12 @@
+- name: join workers to control plane with kubeadm
+  hosts:
+  - k8sworkers
+  become: true
+  roles:
+  - kubeadm_reset
+  tasks:
+  - name: run kubeadm join
+    ansible.builtin.command:
+      cmd: >-
+        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
+        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-1] | trim }}
