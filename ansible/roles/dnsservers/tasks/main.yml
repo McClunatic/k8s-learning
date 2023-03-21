@@ -16,7 +16,7 @@
   when: dnsmasq_addn_hosts is defined
   ansible.builtin.template:
     dest: "{{ dnsmasq_addn_hosts }}"
-    src: additional_hosts.j2
+    src: "{{ dsnmasq_addn_hosts_template }}"
 - name: update self entry in /etc/hosts
   ansible.builtin.lineinfile:
     path: /etc/hosts

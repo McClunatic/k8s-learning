@@ -1,0 +1,14 @@
+# Additional hosts file
+
+## Inventory members
+{% for host in groups['pis'].items() %}
+{{ host }} {{ host.ansible_host }}
+{% endfor %}
+
+## Control plane DNS entry
+{{ control_plane_endpoint }} {{ groups['k8scontrol'][0].ansible_host }}
+
+## Additional entries
+{% for entry in dnsmasq_addn_hosts_list %}
+{{ entry }}
+{% endfor %}

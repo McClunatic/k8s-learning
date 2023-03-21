@@ -3,23 +3,12 @@ dnsmasq_bogus_priv: true
 dnsmasq_expand_hosts: true
 dnsmasq_domain: local
 dnsmasq_addn_hosts: /etc/additional_hosts
+dnsmasq_addn_hosts_template: additional_hosts.ha.j2
 dnsmasq_addn_hosts_list:
 - 192.168.1.90    zeph-control
 - 192.168.1.91    zeph-worker
 - 192.168.1.9     zephyrus
-- 192.168.1.100   raspberrypi-0
-- 192.168.1.101   raspberrypi-1
-- 192.168.1.102   raspberrypi-2
-- 192.168.1.103   raspberrypi-3
-- 192.168.1.110   vatomouro-0
-- 192.168.1.111   vatomouro-1
-- 192.168.1.112   vatomouro-2
-- 192.168.1.113   vatomouro-3
-- 192.168.1.120   vrachos-0
-- 192.168.1.121   vrachos-1
-- 192.168.1.122   vrachos-2
-- 192.168.1.123   vrachos-3
-- 192.168.1.150   vatomouro
+
 # NOTE: IPs assigned depend on order of deployment
 - >
     192.168.1.192   argocd-server.k8s.local
