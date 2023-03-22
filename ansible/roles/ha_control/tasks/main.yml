@@ -9,4 +9,8 @@
     name: python3-kubernetes
   become: true
 - name: run kubeadm join
-  debug: hostvars["vatomouro-0"].kubeadm_init
+  ansible.builtin.command:
+    cmd: >-
+        {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-8] | trim(" \\") }}
+        {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-7] | trim(" \\") }}
+        {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-6] | trim }}
