@@ -60,7 +60,6 @@ pis:
         k8sworkers:
   vars:
     ansible_user: pi
-    # TODO: consider using load balancer for HA
     control_plane_endpoint: vatomouro
     apiserver_vip: 192.168.1.150
     pod_network_cidr: 10.90.0.0/16

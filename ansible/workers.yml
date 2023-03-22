@@ -8,5 +8,5 @@
   - name: run kubeadm join
     ansible.builtin.command:
       cmd: >-
-        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
-        {{ hostvars[control_plane_endpoint].kubeadm_init.stdout_lines[-1] | trim }}
+        {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
+        {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-1] | trim }}

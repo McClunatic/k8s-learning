@@ -3,6 +3,7 @@
   become: true
   roles:
   - kubeadm_reset
+  - ha
 - name: initialize first control plane host
   hosts: vatomouro-0
   become: true

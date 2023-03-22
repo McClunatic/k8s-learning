@@ -1,8 +1,7 @@
 
 - name: install metallb bare metal k8s load balancer
   hosts:
-  # TODO: consider host to use if load balanced
-  - k8scontrol
+  - vatomouro-0
   tasks:
   - name: create temporary k8s manifests directory
     ansible.builtin.tempfile:
