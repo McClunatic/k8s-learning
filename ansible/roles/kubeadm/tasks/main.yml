@@ -139,6 +139,21 @@
   copy:
     content: 'deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
     dest: /etc/apt/sources.list.d/kubernetes.list
+- name: unhold kubelet
+  ansible.builtin.dpkg_selections:
+    name: kubelet
+    selection: install
+  when: kubeadm_unhold == 'true'
+- name: unhold kubeadm
+  ansible.builtin.dpkg_selections:
+    name: kubeadm
+    selection: install
+  when: kubeadm_unhold == 'true'
+- name: unhold kubectl
+  ansible.builtin.dpkg_selections:
+    name: kubectl
+    selection: install
+  when: kubeadm_unhold == 'true'
 - name: run apt update
   ansible.builtin.apt:
     update_cache: true
@@ -148,6 +163,7 @@
     - kubelet
     - kubeadm
     - kubectl
+    state: latest
 - name: hold kubelet
   ansible.builtin.dpkg_selections:
     name: kubelet
