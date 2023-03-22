@@ -1,19 +1,58 @@
-- name: initialize first control plane node
-  hosts: vatomouro-0
+- name: reset control plane hosts
+  hosts: k8scontrol
   become: true
   roles:
   - kubeadm_reset
+- name: initialize first control plane host
+  hosts: vatomouro-0
+  become: true
+  roles:
   - first_control
+- name: install calico container network interface
+  hosts: vatomouro-0
+  roles:
   - cni
+- name: download certificates
+  hosts: vatomouro-0
+  tasks:
+  - name: create temporary certs directory
+    ansible.builtin.file:
+      state: directory
+      path: /tmp/ansible-k8s-pki/etcd
+      recurse: true
+    delegate_to: localhost
+  - name: download kubernetes certs
+    ansible.builtin.fetch:
+      src: '{{ item }}'
+      dest: /tmp/ansible-k8s-pki
+    become: true
+    loop:
+    - /etc/kubernetes/pki/ca.crt
+    - /etc/kubernetes/pki/ca.key
+    - /etc/kubernetes/pki/sa.key
+    - /etc/kubernetes/pki/sa.pub
+    - /etc/kubernetes/pki/front-proxy-ca.crt
+    - /etc/kubernetes/pki/front-proxy-ca.key
+    - /etc/kubernetes/pki/etcd/ca.crt
+    - /etc/kubernetes/pki/etcd/ca.key
+
 - name: synchronize certificates
   hosts: k8scontrol:!vatomouro-0
   become: true
-  delegate_to: vatomouro-0
   roles:
   - sync_certs
+
+- name: clean up local certicates
+  hosts: vatomouro-0
+  tasks:
+  - name: delete temporary certs directory
+    ansible.builtin.file:
+      state: absent
+      path: /tmp/ansible-k8s-pki
+    delegate_to: localhost
+
 - name: join remaining control plane nodes
   hosts: k8scontrol:!vatomouro-0
   become: true
   roles:
-  - kubeadm_reset
   - ha_control

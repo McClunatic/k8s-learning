@@ -4,9 +4,11 @@
     state: directory
     recurse: true
 - name: synchronize kubernetes certs
-  ansible.builtin.synchronize:
-    src: '{{ item }}'
+  ansible.builtin.copy:
+    src: /tmp/ansible-k8s-pki/vatomouro-0{{ item }}
     dest: '{{ item }}'
+    owner: root
+    group: root
   loop:
   - /etc/kubernetes/pki/ca.crt
   - /etc/kubernetes/pki/ca.key
