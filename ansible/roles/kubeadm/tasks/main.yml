@@ -22,17 +22,34 @@
     value: '1'
     sysctl_set: true
 
+# Create downloads area
+- name: create temporary downloads directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: kubeadm
+  register: kubeadm_downloads
+- name: download containerd 1.6.19
+  ansible.builtin.get_url:
+    timeout: 60
+    url: https://github.com/containerd/containerd/releases/download/v1.6.19/containerd-1.6.19-linux-arm64.tar.gz
+    dest: '{{ kubeadm_downloads.path }}/containerd-1.6.19-linux-arm64.tar.gz'
+- name: download cni-plugins 1.2.0
+  ansible.builtin.get_url:
+    timeout: 60
+    url: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm64-v1.2.0.tgz
+    dest: '{{ kubeadm_downloads.path }}/cni-plugins-linux-arm64-v1.2.0.tgz'
+
 # Install containerd
 - name: install containerd 1.6.19
   ansible.builtin.unarchive:
-    src: https://github.com/containerd/containerd/releases/download/v1.6.19/containerd-1.6.19-linux-arm64.tar.gz
+    src: '{{ kubeadm_downloads.path }}/containerd-1.6.19-linux-arm64.tar.gz'
     dest: /usr/local
-    remote_src: yes
+    copy: false
 - name: create /usr/local/lib/systemd/system directory
   ansible.builtin.file:
     path: /usr/local/lib/systemd/system
     state: directory
-    recurse: yes
+    recurse: true
     mode: '0755'
 - name: install containerd.service unit file
   ansible.builtin.get_url:
@@ -58,13 +75,19 @@
   ansible.builtin.file:
     path: /opt/cni/bin
     state: directory
-    recurse: yes
+    recurse: true
     mode: '0755'
 - name: install cni-plugins 1.2.0
   ansible.builtin.unarchive:
-    src: https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-arm64-v1.2.0.tgz
+    src: '{{ kubeadm_downloads.path }}/cni-plugins-linux-arm64-v1.2.0.tgz'
     dest: /opt/cni/bin
-    remote_src: yes
+    copy: false
+
+# Clean up downloads area
+- name: delete temporary downloads directory
+  ansible.builtin.file:
+    state: absent
+    path: '{{ kubeadm_downloads.path }}'
 
 # Configure containerd for systemd cgroup
 - name: create /etc/containerd directory
