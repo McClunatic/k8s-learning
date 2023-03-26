@@ -1,0 +1,4 @@
+- name: install krew kubectl plugin
+  hosts: k8scontrol
+  roles:
+  - krew

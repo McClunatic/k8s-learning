@@ -4,6 +4,8 @@
     dnsmasq_addn_hosts_template: additional_hosts.single.j2
 # Install kubeadm, kubelet and kubectl
 - import_playbook: kubeadm.yml
+# Install krew
+- import_playbook: krew.yml
 # Initialize control plane
 - import_playbook: control_plane.yml
 # Update DNS server to use virtual control plane endpoint
