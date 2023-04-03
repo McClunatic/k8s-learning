@@ -143,17 +143,17 @@
   ansible.builtin.dpkg_selections:
     name: kubelet
     selection: install
-  when: kubeadm_unhold == 'true'
+  when: kubeadm_unhold is defined
 - name: unhold kubeadm
   ansible.builtin.dpkg_selections:
     name: kubeadm
     selection: install
-  when: kubeadm_unhold == 'true'
+  when: kubeadm_unhold is defined
 - name: unhold kubectl
   ansible.builtin.dpkg_selections:
     name: kubectl
     selection: install
-  when: kubeadm_unhold == 'true'
+  when: kubeadm_unhold is defined
 - name: run apt update
   ansible.builtin.apt:
     update_cache: true
