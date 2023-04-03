@@ -1,3 +1,11 @@
+- name: get kubeadm join command
+  hosts: vatomouro-0
+  tasks:
+  - name: print join command
+    ansible.builtin.command: kubeadm token create --print-join-command
+    register: kubeadm_join_command
+    when: hostvars["vatomouro-0"].kubeadm_init is undefined
+
 - name: join workers to control plane with kubeadm
   hosts:
   - k8sworkers
@@ -10,3 +18,8 @@
       cmd: >-
         {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-2] | trim(" \\") }}
         {{ hostvars["vatomouro-0"].kubeadm_init.stdout_lines[-1] | trim }}
+    when: hostvars["vatomouro-0"].kubeadm_init is defined
+  - name: run kubeadm join
+    ansible.builtin.command:
+      cmd: '{{ hostvars["vatomouro-0"].kubeadm_join_command.stdout | trim }}'
+    when: hostvars["vatomouro-0"].kubeadm_init is undefined
