@@ -52,6 +52,9 @@
       path: /tmp/ansible-k8s-pki
     delegate_to: localhost
 
+# Update DNS server to use virtual control plane endpoint
+- import_playbook: dns.yml
+
 - name: join remaining control plane nodes
   hosts: k8scontrol:!vatomouro-0
   become: true
