@@ -54,6 +54,10 @@ pis:
           ansible_host: 192.168.1.120
         vrachos-1:
           ansible_host: 192.168.1.121
+        vrachos-2:
+          ansible_host: 192.168.1.122
+        vrachos-3:
+          ansible_host: 192.168.1.123
     k8s:
       children:
         k8scontrol:
