@@ -1,4 +1,3 @@
-
 - name: install metallb bare metal k8s load balancer
   hosts:
   - vatomouro-0
