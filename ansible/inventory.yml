@@ -38,6 +38,10 @@ pis:
           ansible_host: 192.168.1.122
         vrachos-3:
           ansible_host: 192.168.1.123
+        vrachos-4:
+          ansible_host: 192.168.1.124
+        vrachos-5:
+          ansible_host: 192.168.1.125
     k8scontrol:
       hosts:
         vatomouro-0:
@@ -58,10 +62,19 @@ pis:
           ansible_host: 192.168.1.122
         vrachos-3:
           ansible_host: 192.168.1.123
+    k8sstorage:
+      hosts:
+        vrachos-4:
+          ansible_host: 192.168.1.124
+        vrachos-5:
+          ansible_host: 192.168.1.125
+      vars:
+        ansible_user: rock
     k8s:
       children:
         k8scontrol:
         k8sworkers:
+        k8sstorage:
   vars:
     ansible_user: pi
     control_plane_endpoint: vatomouro

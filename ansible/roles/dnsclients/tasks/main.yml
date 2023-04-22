@@ -19,6 +19,14 @@
     src: 30-dns-servers.conf.j2
     mode: '0644'
   when: inventory_hostname in groups['rockpis']
+- name: set dns processing mode to default
+  community.general.ini_file:
+    path: /etc/NetworkManager/NetworkManager.conf
+    section: main
+    option: dns
+    value: default
+    backup: yes
+  when: inventory_hostname in groups['k8sstorage']
 - name: reload daemon and restart networkmanager service
   ansible.builtin.systemd:
     name: NetworkManager
