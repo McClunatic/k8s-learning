@@ -2,6 +2,8 @@
 - import_playbook: dns.yml
   vars:
     dnsmasq_addn_hosts_template: additional_hosts.single.j2
+# Enable cgroups_memory on raspberry pis
+- import_playbook: cgroups.yml
 # Install kubeadm, kubelet and kubectl
 - import_playbook: kubeadm.yml
 # Install krew
@@ -10,6 +12,8 @@
 - import_playbook: control_plane.yml
 # Join workers
 - import_playbook: workers.yml
+# Taint storage
+- import_playbook: storage.yml
 # Install k8s bare metal load balancer
 - import_playbook: metallb.yml
 # Install argocd and set up argocd self-management

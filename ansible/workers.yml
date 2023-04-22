@@ -9,6 +9,7 @@
 - name: join workers to control plane with kubeadm
   hosts:
   - k8sworkers
+  - k8sstorage
   become: true
   roles:
   - kubeadm_reset

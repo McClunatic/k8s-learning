@@ -1,0 +1,6 @@
+- name: enable cgroups_memory on raspberry pis
+  hosts:
+  - raspis
+  become: true
+  roles:
+    - cgroups

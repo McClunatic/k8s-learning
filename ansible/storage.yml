@@ -1,0 +1,12 @@
+- name: label and taint storage nodes
+  hosts:
+  - vatomouro-0
+  tasks:
+  - name: label storage nodes with storage role
+    ansible.builtin.shell: >-
+      kubectl label node {{ item }} node-role.kubernetes.io/storage=""
+    with_items: "{{ groups['k8sstorage'] }}"
+  - name: taint storage nodes with NoSchedule
+    ansible.builtin.shell: >-
+      kubectl taint node {{ item }} node-role.kubernetes.io/storage:NoSchedule
+    with_items: "{{ groups['k8sstorage'] }}"
