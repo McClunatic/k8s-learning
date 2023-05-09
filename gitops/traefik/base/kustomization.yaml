@@ -5,10 +5,5 @@ kind: Kustomization
 namespace: traefik
 resources:
 - namespace.yaml
-- serviceaccount.yaml
-- clusterrole.yaml
-- clusterrolebinding.yaml
-- service.yaml
-- deployment.yaml
-- ingressclass.yaml
-- dashboard-ingressroute.yaml
+# helm template --namespace=traefik traefik traefik/traefik --include-crds
+- ingress-controller.yaml
