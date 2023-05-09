@@ -1,4 +1,4 @@
-- name: install calico container network interface
+- name: install argocd for declarative management
   hosts:
   - vatomouro-0
   tasks:
