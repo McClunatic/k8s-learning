@@ -4,7 +4,7 @@
   tasks:
   - name: label storage nodes with storage role
     ansible.builtin.shell: >-
-      kubectl label node {{ item }} node-role.kubernetes.io/storage=""
+      kubectl label node {{ item }} node-role.kubernetes.io/storage="true"
     with_items: "{{ groups['k8sstorage'] }}"
   - name: taint storage nodes with NoSchedule
     ansible.builtin.shell: >-
