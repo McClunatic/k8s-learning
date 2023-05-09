@@ -77,7 +77,7 @@ pis:
         k8sstorage:
   vars:
     ansible_user: pi
-    control_plane_endpoint: vatomouro
+    control_plane_endpoint: k8s.clunacy.dev
     apiserver_vip: 192.168.1.150
     pod_network_cidr: 10.90.0.0/16
     ip_address_pool_addresses: 192.168.1.192/27
