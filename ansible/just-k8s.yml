@@ -1,0 +1,14 @@
+# Set up DNS server to include k8s hosts
+- import_playbook: dns.yml
+  vars:
+    dnsmasq_addn_hosts_template: additional_hosts.single.j2
+# Initialize control plane
+- import_playbook: control_plane.yml
+# Join workers
+- import_playbook: workers.yml
+# Taint storage
+- import_playbook: storage.yml
+# Install k8s bare metal load balancer
+- import_playbook: metallb.yml
+# Install argocd and set up argocd self-management
+- import_playbook: argocd.yml
