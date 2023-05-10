@@ -1,0 +1,5 @@
+- op: add
+  path: /spec/template/spec/containers/0/env/-
+  value:
+    name: DISCOVER_AGENT_NODE_AFFINITY
+    value: "node-role.kubernetes.io/storage=true"
