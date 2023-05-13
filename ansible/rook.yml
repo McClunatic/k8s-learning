@@ -22,3 +22,21 @@
             namespace: rook-ceph
           syncPolicy:
             automated: {}
+          ignoreDifferences:
+          - group: ceph.rook.io
+            kind: CephCluster
+            jsonPointers:
+            - /spec/cephVersion
+            - /spec/cleanupPolicy
+            - /spec/continueUpgradeAfterChecksEvenIfNotHealthy
+            - /spec/crashCollector
+            - /spec/dashboard
+            - /spec/healthCheck
+            - /spec/mgr
+            - /spec/mon
+            - /spec/monitoring
+            - /spec/network/connections
+            - /spec/removeOSDsIfOutAndSafeToRemove
+            - /spec/skipUpgradeChecks
+            - /spec/storage/onlyApplyOSDPlacement
+            - /spec/disruptionManagement
