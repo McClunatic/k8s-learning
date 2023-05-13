@@ -26,7 +26,7 @@
     option: dns
     value: default
     backup: yes
-  when: inventory_hostname in groups['k8sstorage']
+  when: inventory_hostname in groups['rockpis']
 - name: reload daemon and restart networkmanager service
   ansible.builtin.systemd:
     name: NetworkManager
