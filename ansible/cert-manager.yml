@@ -1,0 +1,24 @@
+- name: install cert-manager for certificate management and control
+  hosts:
+  - vatomouro-0
+  tasks:
+  - name: apply cert-manager as argocd application
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          name: cert-manager
+          namespace: argocd
+        spec:
+          project: default
+          source:
+            repoURL: https://github.com/McClunatic/k8s-learning.git
+            targetRevision: HEAD
+            path: gitops/cert-manager/overlays/prod
+          destination:
+            name: in-cluster
+            namespace: cert-manager
+          syncPolicy:
+            automated: {}
