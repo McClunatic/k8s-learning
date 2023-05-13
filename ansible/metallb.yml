@@ -2,52 +2,23 @@
   hosts:
   - vatomouro-0
   tasks:
-  - name: create temporary k8s manifests directory
-    ansible.builtin.tempfile:
-      state: directory
-      suffix: k8s
-    register: k8s_manifests
-  - name: download metallb manifest
-    ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
-      dest: '{{ k8s_manifests.path }}/metallb-native.yaml'
-  - name: apply metallb manifest
-    kubernetes.core.k8s:
-      state: present
-      src: '{{ k8s_manifests.path }}/metallb-native.yaml'
-  - name: delete temporary k8s manifests directory
-    ansible.builtin.file:
-      state: absent
-      path: '{{ k8s_manifests.path }}'
-  - name: wait for speaker pods to be ready
-    ansible.builtin.shell: >-
-      kubectl wait -n metallb-system --timeout=300s
-      --for=condition=Ready pod -l component=speaker
-    register: result
-    until: >-
-      result.stderr != "error: no matching resources found"
-  - name: wait for controller to be ready
-    ansible.builtin.shell: >-
-      kubectl wait -n metallb-system --timeout=300s
-      --for=condition=Ready pod -l component=controller
-  - name: apply ipaddresspool manifest
+  - name: apply metallb as argocd application
     kubernetes.core.k8s:
       state: present
       definition:
-        apiVersion: metallb.io/v1beta1
-        kind: IPAddressPool
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
         metadata:
-          name: ip-address-pool
-          namespace: metallb-system
+          name: metallb
+          namespace: argocd
         spec:
-          addresses:
-          - '{{ ip_address_pool_addresses }}'
-  - name: apply l2advertisement manifest
-    kubernetes.core.k8s:
-      state: present
-      definition:
-        apiVersion: metallb.io/v1beta1
-        kind: L2Advertisement
-        metadata:
-          name: l2-advertisement
-          namespace: metallb-system
+          project: default
+          source:
+            repoURL: https://github.com/McClunatic/k8s-learning.git
+            targetRevision: HEAD
+            path: gitops/metallb/overlays/prod
+          destination:
+            name: in-cluster
+            namespace: metallb-system
+          syncPolicy:
+            automated: {}
