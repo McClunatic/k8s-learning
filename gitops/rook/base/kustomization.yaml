@@ -6,6 +6,10 @@ resources:
 - https://raw.githubusercontent.com/rook/rook/v1.11.5/deploy/examples/common.yaml
 - https://raw.githubusercontent.com/rook/rook/v1.11.5/deploy/examples/operator.yaml
 - https://raw.githubusercontent.com/rook/rook/v1.11.5/deploy/examples/cluster.yaml
+- blockpool.yaml
+- objectstore.yaml
+- storageclass-block.yaml
+- storageclass-object.yaml
 patchesStrategicMerge:
 - cluster-placement.yaml
 - operator-config-affinity-tolerations.yaml
