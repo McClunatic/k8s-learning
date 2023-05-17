@@ -1,0 +1,5 @@
+- name: reset the cluster
+  hosts: k8s
+  become: true
+  roles:
+    - kubeadm_reset

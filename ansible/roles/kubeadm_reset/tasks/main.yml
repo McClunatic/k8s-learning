@@ -5,5 +5,9 @@
   file:
     state: absent
     path: /etc/cni/net.d
+- name: remove /var/log/calico
+  file:
+    state: absent
+    path: /var/log/calico
 - name: reboot and await restart
   ansible.builtin.reboot:
