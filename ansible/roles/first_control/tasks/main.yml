@@ -8,16 +8,22 @@
   ansible.builtin.apt:
     name: python3-kubernetes
   become: true
+- name: create temporary kube-proxy config file for kubeadm init
+  ansible.builtin.template:
+    dest: /tmp/config.yaml
+    src: config.yaml.j2
 - name: run kubeadm init
   ansible.builtin.command:
     argv:
     - kubeadm
     - init
-    - --control-plane-endpoint
-    - '{{ control_plane_endpoint }}'
-    - --pod-network-cidr
-    - '{{ pod_network_cidr }}'
+    - --config
+    - /tmp/config.yaml
   register: kubeadm_init
+- name: clean up temporary kube-proxy config file
+  ansible.builtin.file:
+    state: absent
+    path: /tmp/config.yaml
 - name: create ~/.kube directory
   ansible.builtin.file:
     path: ~/.kube
