@@ -133,7 +133,15 @@
 - name: download google cloud public signing key
   ansible.builtin.get_url:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    dest: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+    dest: /tmp/kubernetes-archive-keyring.gpg
+    mode: '0644'
+- name: dearmor the signing key
+  ansible.builtin.shell: >-
+    cat /tmp/kubernetes-archive-keyring.gpg |
+    gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+- name: set permissions on signing key
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
     mode: '0644'
 - name: add kubernetes apt repository
   copy:
