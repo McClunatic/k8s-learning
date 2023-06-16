@@ -1,0 +1,636 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ansible_cluster/">
+      
+      
+        <link rel="next" href="../first_deployments/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
+    
+    
+      
+        <title>Managing a MicroK8s cluster - McCl8s</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#managing-a-microk8s-cluster" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="McCl8s" class="md-header__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            McCl8s
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Managing a MicroK8s cluster
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+            
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+            
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+        </form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="McCl8s" class="md-nav__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    McCl8s
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/" class="md-nav__link">
+        Learning topics
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible_cluster/" class="md-nav__link">
+        Cluster setup with Ansible
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Managing a MicroK8s cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Managing a MicroK8s cluster
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#microk8s-addons" class="md-nav__link">
+    MicroK8s addons
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubectl" class="md-nav__link">
+    kubectl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize" class="md-nav__link">
+    Kustomize
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juju" class="md-nav__link">
+    Juju
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first_deployments/" class="md-nav__link">
+        First deployments
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubeflow/" class="md-nav__link">
+        Kubeflow
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanilla/" class="md-nav__link">
+        Vanilla Kubernetes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#microk8s-addons" class="md-nav__link">
+    MicroK8s addons
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubectl" class="md-nav__link">
+    kubectl
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kustomize" class="md-nav__link">
+    Kustomize
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#juju" class="md-nav__link">
+    Juju
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="managing-a-microk8s-cluster">Managing a MicroK8s cluster</h1>
+<p>The
+<a href="https://kubernetes.io/docs/">Kubernetes documentation</a>
+includes a great conceptual explanation of
+<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/">Kubernetes Objects</a>:</p>
+<blockquote>
+<p>Kubernetes objects are persistent entities in the Kubernetes system.
+Kubernetes uses these entities to represent the state of your cluster.
+Specifically, they can describe:</p>
+<ul>
+<li>What containerized applications are running (and on which nodes)</li>
+<li>The resources available to those applications</li>
+<li>The policies around how those applications behave, such as restart
+  policies, upgrades, and fault-tolerance</li>
+</ul>
+<p>A Kubernetes object is a "record of intent"--once you create the object, the
+Kubernetes system will constantly work to ensure that object exists. By
+creating an object, you're effectively telling the Kubernetes system what you
+want your cluster's workload to look like; this is your cluster's desired
+state.</p>
+</blockquote>
+<p>We'll use a few different methods for working with Kubernetes Objects,
+including:</p>
+<ul>
+<li><a href="#microk8s-addons">MicroK8s addons</a></li>
+<li><a href="#kubectl"><code>kubectl</code></a>, the Kubernetes CLI</li>
+<li><a href="#kustomize">Kustomize</a>, the Kubernetes customization tool</li>
+<li><a href="#juju">Juju</a>, <a href="https://juju.is/">Charmed Operator framework</a></li>
+</ul>
+<h2 id="microk8s-addons">MicroK8s addons</h2>
+<p><a href="https://microk8s.io/docs/addons">MicroK8s addons</a> are extra services that
+can be enabled in MicroK8s, creating Objects, effectively functioning as a
+<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/">Kubernetes Operator</a>.
+We will use addons to enable:</p>
+<ul>
+<li><code>dashboard</code>: The standard Kubernetes dashboard</li>
+<li><code>dns</code>: CoreDNS</li>
+<li><code>ingress</code>: A simple ingress controller for external access</li>
+<li><code>metallb</code>: The <a href="https://metallb.universe.tf/">MetalLB</a> LoadBalancer</li>
+<li><code>hostpath-storage</code>: A default storage class</li>
+</ul>
+<p>We can do that in one line (here providing <code>metallb</code> with an IP address
+range to use for LoadBalancers) like this:</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dashboard<span class="w"> </span>dns<span class="w"> </span>ingress<span class="w"> </span>metallb:192.168.1.192/27<span class="w"> </span>hostpath-storage
+</code></pre></div>
+<h2 id="kubectl"><code>kubectl</code></h2>
+<p><a href="https://kubernetes.io/docs/reference/kubectl/"><code>kubectl</code></a> is the CLI for
+communicating with the Kubernetes control plane, and is able to perform
+a large set of operations including <code>create</code>, <code>get</code>, <code>describe</code>, and <code>delete</code>.</p>
+<p>We will use <code>kubectl</code> primarily for four operations:</p>
+<ol>
+<li>To <code>patch</code> addons</li>
+<li>To <code>create</code> secrets</li>
+<li>To <code>create</code> tokens</li>
+<li>To run <code>kustomize</code> (see <a href="#kustomize">Kustomize</a> below)</li>
+</ol>
+<p>An example of something to patch is the <code>ingress</code> controller, to enable
+SSL passthrough for services that need to handle TLS themselves.</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>patch<span class="w"> </span>daemonset<span class="w"> </span>-n<span class="w"> </span>ingress<span class="w"> </span>nginx-ingress-microk8s-controller<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;: &quot;add&quot;, &quot;path&quot;: &quot;/spec/template/spec/containers/0/args/-&quot;, &quot;value&quot;: &quot;--enable-ssl-passthrough&quot;}]&#39;</span>
+</code></pre></div>
+<p>Secrets can be created of different kinds, including <code>tls</code> and Opaque
+(<code>generic</code>) secrets. For example, to create an Opaque secret containing
+TLS certificate and key files from a <code>./certs/</code> directory, you can run:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>kubernetes-dashboard-certs<span class="w"> </span>--from-file<span class="o">=</span>./certs
+</code></pre></div>
+<p>Tokens can be created to provide user credentials. For example, to generate
+a token for <code>admin-user</code> you can run:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>create<span class="w"> </span>token<span class="w"> </span>admin-user
+</code></pre></div>
+<blockquote>
+<p>NOTE: In the above commands, <code>microk8s kubectl</code> has been aliased to <code>k</code>.</p>
+</blockquote>
+<h2 id="kustomize">Kustomize</h2>
+<p><a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/">Kustomize</a>
+is a standalone tool for customizing Kubernetes objects using
+<a href="https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#kustomization">kustomization files</a>.
+Through those files, Kustomize allows you to:</p>
+<ul>
+<li>generate resources from other sources</li>
+<li>set cross-cutting fields for resources</li>
+<li>compose and customize collections of resources</li>
+</ul>
+<p>The <a href="https://github.com/kubernetes-sigs/kustomize">Kustomize GitHub page</a>
+features a great explanation of usage. We will use <code>kustomize</code> to modify and
+create resources on the cluster, including:</p>
+<ul>
+<li>Creating a LoadBalancer Service for the cluster</li>
+<li>Creating Ingress resources for the <code>dashboard</code> <a href="#microk8s-addons">addon</a></li>
+<li>Deploying Tekton Pipelines</li>
+</ul>
+<p>A simple example of a Kustomization with a production
+<a href="https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#overlay">overlay</a>
+is the LoadBalancer Service. We define that Service with the following
+resource definition, <code>k8s/nginx-ingress/base/ingress-service.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<p>We declare that resource in our kustomization file,
+<code>k8s/nginx-ingress/base/kustomization.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/#kustomize</span>
+<span class="c1"># https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-manifests/</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize.config.k8s.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+
+<span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="c1"># Deploy the ingress controller</span>
+<span class="c1"># https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/daemon-set/nginx-ingress.yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-ingress.yaml</span>
+<span class="c1"># Get access to the ingress controller</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.0.0/deployments/service/loadbalancer.yaml</span>
+</code></pre></div>
+<p>Note both of these files live in a <code>base/</code> directory. In a neighboring
+<code>overlays/prod</code> directory, we create our trivial production overlay,
+<code>k8s/nginx-ingress/overlays/prod/kustomization.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kustomize.config.k8s.io/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kustomization</span>
+
+<span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingress</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../../base</span>
+</code></pre></div>
+<p>In this case, <code>prod</code> does not modify <code>base</code> at all, but it can and generally
+will, for example applying labels to indicate the configuration and to
+modify resources.</p>
+<p>With the kustomizations defined, we can
+<a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#how-to-apply-view-delete-objects-using-kustomize">apply</a>
+our <code>prod</code> overlay to the cluster as follows:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/nginx-ingress/overlays/prod
+</code></pre></div>
+<p>The implementations of all kustomizations can be viewed in the
+<a href="https://github.com/McClunatic/k8s-learning/tree/main/k8s/">source code</a>.</p>
+<h2 id="juju">Juju</h2>
+<p><a href="https://juju.is/">Juju</a> is an open source framework that uses
+<a href="https://juju.is/docs/sdk/charmed-operators">Charmed Operators</a>, or <strong>Charms</strong>,
+to deploy cloud infrastructure and operations.</p>
+<p>Our use case for using Juju is to install
+<a href="https://www.kubeflow.org/">Kubeflow</a>, a machine learning toolkit for
+Kubernetes. Specifically, we will use it to deploy
+<a href="https://charmed-kubeflow.io/">Charmed Kubeflow</a>'s <code>kubeflow-lite</code> bundle.</p>
+<p>For installation steps, please refer to
+<a href="https://charmed-kubeflow.io/docs/install">Charmed Kubeflow guidance</a>.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a51614de.min.js"></script>
+      
+    
+  </body>
+</html>

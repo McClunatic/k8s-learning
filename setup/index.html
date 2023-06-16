@@ -1,0 +1,822 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../topics/">
+      
+      
+        <link rel="next" href="../ansible_cluster/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
+    
+    
+      
+        <title>Setup - McCl8s</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="McCl8s" class="md-header__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            McCl8s
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+            
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+            
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+        </form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="McCl8s" class="md-nav__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    McCl8s
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/" class="md-nav__link">
+        Learning topics
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Setup
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Setup
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wsl-2" class="md-nav__link">
+    WSL 2
+  </a>
+  
+    <nav class="md-nav" aria-label="WSL 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-networking-to-bridged-mode" class="md-nav__link">
+    Switching networking to bridged mode
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching networking to bridged mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-an-example" class="md-nav__link">
+    Option 1: an example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-by-reference" class="md-nav__link">
+    Option 2: by reference
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-option-2-is-necessary" class="md-nav__link">
+    Why Option 2 is necessary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-firewall" class="md-nav__link">
+    Windows firewall
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#podman" class="md-nav__link">
+    Podman
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs-code" class="md-nav__link">
+    VS Code
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microk8s" class="md-nav__link">
+    MicroK8s
+  </a>
+  
+    <nav class="md-nav" aria-label="MicroK8s">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-systemd" class="md-nav__link">
+    Enabling systemd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-snapd" class="md-nav__link">
+    Installing snapd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-microk8s" class="md-nav__link">
+    Installing MicroK8s
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible" class="md-nav__link">
+    Ansible
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible_cluster/" class="md-nav__link">
+        Cluster setup with Ansible
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s_management/" class="md-nav__link">
+        Managing a MicroK8s cluster
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first_deployments/" class="md-nav__link">
+        First deployments
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubeflow/" class="md-nav__link">
+        Kubeflow
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanilla/" class="md-nav__link">
+        Vanilla Kubernetes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wsl-2" class="md-nav__link">
+    WSL 2
+  </a>
+  
+    <nav class="md-nav" aria-label="WSL 2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-networking-to-bridged-mode" class="md-nav__link">
+    Switching networking to bridged mode
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching networking to bridged mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-an-example" class="md-nav__link">
+    Option 1: an example
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-by-reference" class="md-nav__link">
+    Option 2: by reference
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-option-2-is-necessary" class="md-nav__link">
+    Why Option 2 is necessary
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows-firewall" class="md-nav__link">
+    Windows firewall
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#podman" class="md-nav__link">
+    Podman
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vs-code" class="md-nav__link">
+    VS Code
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#microk8s" class="md-nav__link">
+    MicroK8s
+  </a>
+  
+    <nav class="md-nav" aria-label="MicroK8s">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-systemd" class="md-nav__link">
+    Enabling systemd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-snapd" class="md-nav__link">
+    Installing snapd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-microk8s" class="md-nav__link">
+    Installing MicroK8s
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ansible" class="md-nav__link">
+    Ansible
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="setup">Setup</h1>
+<p>McCl8s is a 4-node K8s cluster deployed on four nodes. A Windows 11 machine
+(with Ubuntu 22.04 via WSL 2) is used to run the control plane, and three
+Raspberry Pi 3 machines are used as worker nodes.</p>
+<p>In this section we'll cover setup, installation, and configuration work for:</p>
+<ol>
+<li><a href="#wsl-2">WSL-2</a></li>
+<li><a href="#windows-firewall">Windows firewall</a></li>
+<li><a href="#podman">Podman</a></li>
+<li><a href="#microk8s">MicroK8s</a></li>
+<li><a href="#ansible">Ansible</a></li>
+</ol>
+<h2 id="wsl-2">WSL 2</h2>
+<blockquote>
+<p>NOTE: As of November 15, 2022, WSL 2 has
+<a href="https://github.com/microsoft/WSL/discussions/9155">reached 1.0.0</a>,
+with Microsoft removing the preview label and making it
+<a href="https://devblogs.microsoft.com/commandline/the-windows-subsystem-for-linux-in-the-microsoft-store-is-now-generally-available-on-windows-10-and-11/">generally available in the Microsoft Store</a>.
+Instructions in this section assume the WSL 2 has been updated to 1.0.0.</p>
+</blockquote>
+<h3 id="switching-networking-to-bridged-mode">Switching networking to bridged mode</h3>
+<p>By default, WSL 2 runs in Network Access Translation (NAT) mode, meaning
+it has a virtualized ethernet adapter with its own unique IP address.
+This makes it challenging to access a WSL 2 distribution from another
+local area network (LAN) machine. To enable access, there are two options:</p>
+<ol>
+<li>To go through the same steps as one would for a regular virtual machine
+   with an internal virtual network. This approach for
+   <a href="https://learn.microsoft.com/en-us/windows/wsl/networking#accessing-a-wsl-2-distribution-from-your-local-area-network-lan">accessing a WSL 2 distribution from a LAN</a>
+   is documented by Microsoft.</li>
+<li>To configure Windows, Hyper-V, and WSL 2 to support and run in bridged mode,
+   allowing the WSL 2 distribution to acquire an IP address itself in the
+   LAN.</li>
+</ol>
+<h4 id="option-1-an-example">Option 1: an example</h4>
+<p>IP addresses for the Ubuntu WSL 2 distribution are captured into the
+<code>$hostnames</code> array. The primary IP address is then used as the connect address
+for a port proxy started by <code>netsh</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt; </span><span class="nv">$hostnames</span> <span class="p">=</span> <span class="p">@(&amp;</span> <span class="n">wsl</span> <span class="n">-d</span> <span class="n">Ubuntu</span> <span class="n">hostname</span> <span class="n">-I</span><span class="p">)</span> <span class="n">-split</span> <span class="s1">&#39; &#39;</span>
+<span class="gp">&gt; </span><span class="n">netsh</span> <span class="n">interface</span> <span class="n">portproxy</span> <span class="n">add</span> <span class="n">v4tov4</span> <span class="p">`</span>
+<span class="go">    listenport=25000 listenaddress=0.0.0.0 `</span>
+<span class="go">    connectport=25000 connectaddress=$hostnames[0]</span>
+</code></pre></div>
+<h4 id="option-2-by-reference">Option 2: by reference</h4>
+<p>Setting up WSL 2 to run in bridged mode involves:</p>
+<ul>
+<li>Ensuring minimum version requirements for WSL 2 itself</li>
+<li>Setting up a bridged virtual switch in Hyper-V</li>
+<li>Reconfiguring WSL 2</li>
+</ul>
+<p>This approach was discussed in a
+<a href="https://github.com/microsoft/WSL/issues/4150#issuecomment-1303984769">WSL GitHub feature request</a>
+and more completely documented in this
+<a href="https://github.com/luxzg/WSL2-fixes/blob/master/networkingMode%3Dbridged.md">WSL 2 bridged mode networking guide</a>.
+Rather than repeating the documentation here, please follow this excellent
+guide!</p>
+<blockquote>
+<p>Follow optional steps to enable <code>systemd</code>. It's a prerequisite for <code>snap</code>,
+which is used to install MicroK8s.</p>
+</blockquote>
+<h4 id="why-option-2-is-necessary">Why Option 2 is necessary</h4>
+<p>Option 1 is the simpler of the two, and for anonymous accessibility,
+both options work, making Option 1 an easy choice.</p>
+<p>However, for the K8s cluster use case, there are two problems:</p>
+<ol>
+<li>Inbound connections from a port proxy will not come from the LAN
+   IP address of the client, but the IP of the NAT router. MicroK8s will
+   refuse to add nodes whose self-reported machine names do not match (per
+   DNS lookup) the name associated with their IP.</li>
+<li>Because <em>all</em> inbound connections will appear to WSL 2 as having come from
+   the router IP, it is impossible to distinguish incoming MicroK8s join
+   requests and therefore impossible to add multiple workers from the LAN.</li>
+</ol>
+<p>Those complications disappear with a network bridge, making Option 2 the
+necessary choice for a WSL 2 + Raspberry Pi MicroK8s cluster.</p>
+<h2 id="windows-firewall">Windows firewall</h2>
+<p>The Windows (WSL 2) machine will serve as the control plane for the cluster,
+and must be reachable by worker nodes. To be reachable, the Windows Defender
+firewall must be configured with new rules. ICMP access (used to ping) and
+TCP access involve different rules. The following links provide guidance to
+<a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-icmp-rule">create an inbound ICMP rule</a>
+and tolle TCP access to the machine (including for specific ports or port
+ranges), follow the link to
+<a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/create-an-inbound-port-rule">create an inbound port rule</a>.</p>
+<h2 id="podman">Podman</h2>
+<p>Podman is a daemonless container engine for developing and managing OCI
+containers. <a href="https://podman.io/getting-started/installation">Installing Podman</a>
+is straightforward for most Linux OSes, with packages available in most
+official repositories. It can be installed in Ubuntu as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu 20.10 and newer</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>-y<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>podman
+</code></pre></div>
+<h2 id="vs-code">VS Code</h2>
+<p>As discussed in
+<a href="https://github.com/microsoft/vscode-docker/issues/1590#issuecomment-769284759">this GitHub  issue</a>,
+Podman can be used in place of Docker in the <code>vscode-docker</code> extension using
+the following steps:</p>
+<ol>
+<li>Run: <code>systemctl --user enable --now podman.socket</code></li>
+<li>Set VS Code option <code>docker.host</code> to <code>unix:///run/user/1000/podman/podman.sock</code>
+   (this will persist once set)</li>
+</ol>
+<blockquote>
+<p>NOTE: <a href="https://github.com/microsoft/vscode-docker/issues/3539">docker.host</a>
+was deprecated and removed as of Docker extension version 1.23. The new
+extension allows the user to specify environment variable/value pairs, but
+<code>DOCKER_HOST</code> does not work as of this writing. Follow
+<a href="https://github.com/microsoft/vscode-docker/issues/3766">this issue</a> to
+track changes.</p>
+</blockquote>
+<h2 id="microk8s">MicroK8s</h2>
+<p>MicroK8s is a simple and fast way to get Kubernetes up and running, both for
+development and production use. For the McCl8s cluster, getting MicroK8s
+installed takes a few steps.</p>
+<h3 id="enabling-systemd">Enabling <code>systemd</code></h3>
+<p>If <code>systemd</code> was not enabled as part of configuring <a href="#wsl-2">WSL 2</a>, read more
+about how to enable it in this
+<a href="https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/">Microsoft developer blog</a>.
+It's a prerequisite for <code>snap</code>, which comes next.</p>
+<h3 id="installing-snapd">Installing <code>snapd</code></h3>
+<p>Snaps are app packages for Linux that are cross-platform and dependency-free.
+<code>snapd</code> can be installed on Ubuntu (if not already installed) by running:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>snapd
+</code></pre></div>
+<p>As discussed on
+<a href="https://snapcraft.io/docs/installing-snap-on-ubuntu">Snap's installation page</a>,
+you can optionally test <code>snap</code> after restarting by installing and running
+a <em>hello-world</em> snap:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>hello-world
+</code></pre></div>
+<p><code>hello-world 6.4 from Canonical✓ installed</code></p>
+<div class="highlight"><pre><span></span><code>hello-world
+</code></pre></div>
+<p><code>Hello World!</code></p>
+<h3 id="installing-microk8s">Installing MicroK8s</h3>
+<p><a href="https://microk8s.io/#install-microk8s">MicroK8s</a> can be installed as a <code>snap</code>
+package after <a href="#installing-snapd">Installing <code>snapd</code></a>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic
+</code></pre></div>
+<p>Once MicroK8s is installed, you can check its status while it starts:</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
+</code></pre></div>
+<p>The Kubernetes CLI, <code>kubectl</code>, is available as a <code>microk8s</code> subcommand:</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>kubectl<span class="w"> </span>-h
+</code></pre></div>
+<p>For convenience, consider aliasing <code>microk8s kubectl</code>!</p>
+<h2 id="ansible">Ansible</h2>
+<p>Per
+<a href="https://docs.ansible.com/ansible/latest/index.html">its own documentation</a>,</p>
+<blockquote>
+<p>Ansible is an IT automation tool. It can configure systems, deploy software,
+and orchestrate more advanced IT tasks such as continuous deployments or
+zero downtime rolling updates.</p>
+</blockquote>
+<p>To configure and deploy software to the cluster's Raspberry Pi worker nodes,
+we'll use Ansible.  Installing Ansible (on what will be the <em>control node</em>)
+requires a Python 3.8 or higher on the system, with pip installed as well. To
+ensure pip is installed on Ubuntu 22.04 LTS, for example, run:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-pip<span class="w"> </span>python3-pip-whl
+</code></pre></div>
+<p>Once done, Ansible can be
+<a href="https://pip.pypa.io/en/latest/user_guide/#user-installs">user installed</a>
+by running:</p>
+<div class="highlight"><pre><span></span><code>pip3<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>ansible
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a51614de.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,675 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../k8s_management/">
+      
+      
+        <link rel="next" href="../kubeflow/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.16">
+    
+    
+      
+        <title>First deployments - McCl8s</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#first-deployments" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="McCl8s" class="md-header__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            McCl8s
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              First deployments
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+            
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+            
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+        </form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="McCl8s" class="md-nav__button md-logo" aria-label="McCl8s" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    McCl8s
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/" class="md-nav__link">
+        Learning topics
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible_cluster/" class="md-nav__link">
+        Cluster setup with Ansible
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s_management/" class="md-nav__link">
+        Managing a MicroK8s cluster
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          First deployments
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        First deployments
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-microk8s-addons" class="md-nav__link">
+    Enabling MicroK8s addons
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patching-the-ingress-controller" class="md-nav__link">
+    Patching the ingress controller
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-an-ingress-service" class="md-nav__link">
+    Adding an ingress Service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exposing-the-kubernetes-dashboard" class="md-nav__link">
+    Exposing the Kubernetes Dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tekton" class="md-nav__link">
+    Tekton
+  </a>
+  
+    <nav class="md-nav" aria-label="Tekton">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploying-tekton-resources" class="md-nav__link">
+    Deploying Tekton resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploying-the-dashboard" class="md-nav__link">
+    Deploying the Dashboard
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-tekton-cli" class="md-nav__link">
+    Setting up Tekton CLI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubeflow/" class="md-nav__link">
+        Kubeflow
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vanilla/" class="md-nav__link">
+        Vanilla Kubernetes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-microk8s-addons" class="md-nav__link">
+    Enabling MicroK8s addons
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#patching-the-ingress-controller" class="md-nav__link">
+    Patching the ingress controller
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-an-ingress-service" class="md-nav__link">
+    Adding an ingress Service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exposing-the-kubernetes-dashboard" class="md-nav__link">
+    Exposing the Kubernetes Dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tekton" class="md-nav__link">
+    Tekton
+  </a>
+  
+    <nav class="md-nav" aria-label="Tekton">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploying-tekton-resources" class="md-nav__link">
+    Deploying Tekton resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploying-the-dashboard" class="md-nav__link">
+    Deploying the Dashboard
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-tekton-cli" class="md-nav__link">
+    Setting up Tekton CLI
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="first-deployments">First deployments</h1>
+<p>With <a href="../setup/">setup</a> complete, we can begin deployments.</p>
+<h2 id="enabling-microk8s-addons">Enabling MicroK8s addons</h2>
+<p>To start, let's enable the standard Kubernetes dashboard:</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dashboard
+</code></pre></div>
+<p>Then, enable addons that will be required to install Kubeflow.
+In the below example, we can also set an IP range for
+<code>metallb</code> to use for external IPs:</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dns<span class="w"> </span>hostpath-storage<span class="w"> </span>ingress<span class="w"> </span>metallb:192.168.1.192/27
+</code></pre></div>
+<h2 id="patching-the-ingress-controller">Patching the ingress controller</h2>
+<p>The <code>ingress</code> addon runs <code>ingress-nginx</code>, a Kubernetes Ingress NGINX
+controller. We need to enable
+<a href="https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough">SSL passthrough</a>
+to allow passthrough backends to Ingress objects. Do that by running the
+following:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>patch<span class="w"> </span>daemonset<span class="w"> </span>-n<span class="w"> </span>ingress<span class="w"> </span>nginx-ingress-microk8s-controller<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;: &quot;add&quot;, &quot;path&quot;: &quot;/spec/template/spec/containers/0/args/-&quot;, &quot;value&quot;: &quot;--enable-ssl-passthrough&quot;}]&#39;</span>
+</code></pre></div>
+<h2 id="adding-an-ingress-service">Adding an ingress Service</h2>
+<p>With <code>metallb</code> and <code>ingress</code> addons both active, we can follow
+<a href="https://microk8s.io/docs/addon-metallb">MetalLB addon guidance</a> to
+set up an ingress Service. That can be done via <code>kubectl</code>, but we'll
+use Kustomize. We define our ingress Service resource, a LoadBalancer,
+in
+<a href="https://github.com/McClunatic/k8s-learning/tree/main/k8s/nginx-ingress"><code>k8s/nginx-ingress/base</code></a>:</p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<p>Using our <code>prod</code> overlay, apply the service by running:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/nginx-ingress/overlays/prod
+</code></pre></div>
+<h2 id="exposing-the-kubernetes-dashboard">Exposing the Kubernetes Dashboard</h2>
+<p>With a LoadBalancer running, we can expose the Kubernetes Dashboard, making
+it reachable via an external IP. As with the ingress Service, we have
+Kustomize resources prepared for the dashboard. Apply those kustomizations
+by running:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/kubernetes-dashboard/overlays/prod
+</code></pre></div>
+<blockquote>
+<p>Beyond the scope of the current documentation:</p>
+<ul>
+<li>The Ansible dns.yml playbook is also configured to add the hostname of the
+  Ingress, &gt; <code>kubernetes-dashboard.k8s.local</code>, to the DNS server.</li>
+<li>The default certificates of the dashboard are self-signed and will not be
+  trusted by browsers. However, setting up a
+  <a href="https://www.ekervhen.xyz/posts/2021-02/private-ca-with-cfssl/">private CA with cfssl</a>
+  and updating the <code>kubernetes-dashboard-certs</code> secret is an option to
+  serve a trusted Dashboard.</li>
+</ul>
+</blockquote>
+<p>Provided a <code>./certs</code> directory with a <code>tls.crt</code> and <code>tls.key</code>, run the following
+to get replace the self-signed default certificates with one of your own:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Needs to hold CA-signed tls.crt and tls.key</span>
+k<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>kubernetes-dashboard-certs<span class="w"> </span>--from-file<span class="o">=</span>./certs
+<span class="c1"># Update deployment per</span>
+<span class="c1"># https://github.com/kubernetes/dashboard/blob/master/docs/user/installation.md#recommended-setup</span>
+k<span class="w"> </span>patch<span class="w"> </span>deployments.apps<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>kubernetes-dashboard<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;: &quot;add&quot;, &quot;path&quot;: &quot;/spec/template/spec/containers/0/args/-&quot;, &quot;value&quot;: &quot;--tls-cert-file=/tls.crt&quot;}]&#39;</span>
+k<span class="w"> </span>patch<span class="w"> </span>deployments.apps<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>kubernetes-dashboard<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--type<span class="o">=</span>json<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="o">=</span><span class="s1">&#39;[{&quot;op&quot;: &quot;add&quot;, &quot;path&quot;: &quot;/spec/template/spec/containers/0/args/-&quot;, &quot;value&quot;: &quot;--tls-key-file=/tls.key&quot;}]&#39;</span>
+</code></pre></div>
+<p>When visiting the Kubernetes Dashboard, a token will be required for access.
+Use the <code>admin-user</code> to generate one by running:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>token<span class="w"> </span>admin-user
+</code></pre></div>
+<p>Enter the displayed token where prompted in the Dashboad.</p>
+<h2 id="tekton">Tekton</h2>
+<p>Per <a href="https://tekton.dev/docs/">Tekton documentation</a>,</p>
+<blockquote>
+<p>Tekton is a cloud-native solution for building CI/CD systems. It consists of
+Tekton Pipelines, which provides the building blocks, and of supporting
+components, such as Tekton CLI and Tekton Catalog, that make Tekton a
+complete ecosystem.</p>
+</blockquote>
+<h3 id="deploying-tekton-resources">Deploying Tekton resources</h3>
+<p>To deploy Tekton Pipelines and Tekton Triggers, apply the following
+kustomizations:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/tekton-pipelines/overlays/prod
+k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/tekton-triggers/overlays/prod
+</code></pre></div>
+<h3 id="deploying-the-dashboard">Deploying the Dashboard</h3>
+<p>The kustomizations for Tekton Dashboard refer to a <code>tekton-pipelines</code>
+namespace secret, <code>tekton-dashboard-tls</code>. We'll need to make that first.
+Creating a TLS certificate/key pair is beyond the scope of the current
+documentation, however you may follow guidance to create
+<a href="https://www.ekervhen.xyz/posts/2021-02/private-ca-with-cfssl/">private CA with cfssl</a>
+here. The documentation example below assumes a <code>certificates/</code> directory with
+certificate and key files for the dashboard.</p>
+<p>To create the <code>tekton-dashboard-tls</code> certificate, refer to our certificate
+and key by running:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>tekton-pipelines<span class="w"> </span>secret<span class="w"> </span>tls<span class="w"> </span>tekton-dashboard-tls<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cert<span class="o">=</span>certificates/tekton-dashboard-fullchain.pem<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--key<span class="o">=</span>certificates/tekton-dashboard-key.pem
+</code></pre></div>
+<p>With the secret available, apply the dashboard kustomizations:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>k8s/tekton-dashboard/overlays/prod
+</code></pre></div>
+<h3 id="setting-up-tekton-cli">Setting up Tekton CLI</h3>
+<p>The <code>tkn</code> CLI needs to be able to read a <code>kubeconfig</code> file. When using
+MicroK8s, the default file is neither <code>~/.kube/config</code> or is it given by
+environment variable <code>KUBECONFIG</code>. By running:</p>
+<div class="highlight"><pre><span></span><code>k<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-v<span class="o">=</span><span class="m">6</span>
+</code></pre></div>
+<p>You will see output like the following:</p>
+<div class="highlight"><pre><span></span><code>I1204<span class="w"> </span><span class="m">07</span>:52:59.522754<span class="w">  </span><span class="m">200900</span><span class="w"> </span>loader.go:374<span class="o">]</span><span class="w"> </span>Config<span class="w"> </span>loaded<span class="w"> </span>from<span class="w"> </span>file:<span class="w">  </span>/var/snap/microk8s/4221/credentials/client.config
+</code></pre></div>
+<p>That instance identifier <code>4221</code> in the example above is symbolically linked
+to <code>current</code>, so one solution for getting <code>tkn</code> to work is to use:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">alias</span><span class="w"> </span><span class="nv">tkn</span><span class="o">=</span><span class="s2">&quot;env KUBECONFIG=/var/snap/microk8s/current/credentials/client.config&quot;</span>
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a51614de.min.js"></script>
+      
+    
+  </body>
+</html>
