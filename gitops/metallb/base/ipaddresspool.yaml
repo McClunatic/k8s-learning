@@ -7,4 +7,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   addresses:
-  - 192.168.1.192/27
+  - 192.168.1.0/24
+  avoidBuggyIPs: true
+  autoAssign: false
